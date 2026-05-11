@@ -1,0 +1,62 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: portfolio-gateway
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+# Configuración de Swagger Agregado
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: Feature Flag API
+        url: /feature-flags/v3/api-docs
+        displayName: Feature Flag API
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+    instances:
+      featureFlagCircuitBreaker:
+        baseConfig: default
+      docsCircuitBreaker:
+        baseConfig: default
+
+# Observabilidad (Alineado con Spring Boot 3.4+)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics, circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      access: read_only
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  health:
+    circuitbreakers:
+      enabled: true

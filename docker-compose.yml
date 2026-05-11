@@ -1,0 +1,92 @@
+services:
+  # ==================== FRONTEND (Quasar) ====================
+  frontend:
+    image: ${DOCKER_USERNAME:-portfolio}/portfolio-frontend:${TAG:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: portfolio-frontend
+    restart: on-failure
+    networks:
+      - portfolio-global-network
+    ports:
+      - "${FRONTEND_PORT:-9000}:80" # Quasar built as SPA served by Nginx on port 80
+    depends_on:
+      gateway:
+        condition: service_healthy
+
+  # ==================== API GATEWAY (Traffic Police) ====================
+  gateway:
+    image: ${DOCKER_USERNAME:-portfolio}/portfolio-gateway:${TAG:-latest}
+    build:
+      context: ./backend/portfolio-gateway
+      dockerfile: Dockerfile
+    container_name: portfolio-gateway
+    restart: on-failure
+    networks:
+      - portfolio-global-network
+      - portfolio-internal-network
+    ports:
+      - "${GATEWAY_PORT:-8080}:8080"
+    environment:
+      - REDIS_HOST=portfolio-redis
+      - APP_SERVICES_FEATURE_FLAG_API_URL=http://portfolio-backend:8081
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:9000}
+      - SERVER_PORT=8080
+    depends_on:
+      backend:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==================== FEATURE FLAG API (Backend) ====================
+  backend:
+    image: ${DOCKER_USERNAME:-portfolio}/portfolio-backend:${TAG:-latest}
+    build:
+      context: ./backend/feat-flag-api-bytes-colabs
+      dockerfile: Dockerfile
+    container_name: portfolio-backend
+    restart: on-failure
+    networks:
+      - portfolio-internal-network
+    environment:
+      - SERVER_PORT=8081
+      - JWT_SECRET=${JWT_SECRET}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ==================== CACHE (Redis) ====================
+  redis:
+    image: redis:7-alpine
+    container_name: portfolio-redis
+    restart: on-failure
+    networks:
+      - portfolio-internal-network
+    volumes:
+      - portfolio-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+# ==================== VOLUMES ====================
+volumes:
+  portfolio-redis-data:
+    external: false
+
+# ==================== NETWORKS ====================
+networks:
+  portfolio-global-network:
+    driver: bridge
+  portfolio-internal-network:
+    driver: bridge
