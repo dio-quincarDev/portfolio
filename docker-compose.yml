@@ -54,6 +54,8 @@ services:
     restart: on-failure
     networks:
       - portfolio-internal-network
+    volumes:
+      - portfolio-h2-data:/opt/app/h2-data
     environment:
       - SERVER_PORT=8081
       - JWT_SECRET=${JWT_SECRET}
@@ -82,6 +84,7 @@ services:
 # ==================== VOLUMES ====================
 volumes:
   portfolio-redis-data:
+  portfolio-h2-data:
     external: false
 
 # ==================== NETWORKS ====================
