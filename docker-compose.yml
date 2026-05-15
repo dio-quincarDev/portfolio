@@ -55,7 +55,7 @@ services:
     networks:
       - portfolio-internal-network
     volumes:
-      - portfolio-h2-data:/opt/app/h2-data
+      - portfolio-sqlite-data:/app/data
     environment:
       - SERVER_PORT=8081
       - JWT_SECRET=${JWT_SECRET}
@@ -84,7 +84,7 @@ services:
 # ==================== VOLUMES ====================
 volumes:
   portfolio-redis-data:
-  portfolio-h2-data:
+  portfolio-sqlite-data:
     external: false
 
 # ==================== NETWORKS ====================

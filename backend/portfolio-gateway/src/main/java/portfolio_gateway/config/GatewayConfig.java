@@ -14,13 +14,16 @@ import portfolio_gateway.constants.ApiPathConstants;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 
 @Configuration
 public class GatewayConfig {
 
     @Value("${app.services.feature-flag-api.url:http://localhost:8081}")
     private String featureFlagServiceUrl;
+
+    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:9000}")
+    private String allowedOrigins;
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
@@ -39,17 +42,9 @@ public class GatewayConfig {
                         )
                         .uri(featureFlagServiceUrl))
 
-                .route("demo-api", r -> r.path(ApiPathConstants.DEMO_PATH)
-                        .filters(f -> f
-                                .requestRateLimiter(rl -> rl.setRateLimiter(redisRateLimiter()).setKeyResolver(userKeyResolver()))
-                                .circuitBreaker(cb -> cb.setName("demoCircuitBreaker"))
-                        )
-                        .uri(featureFlagServiceUrl))
-
                 .route("feature-flag-docs", r -> r.path(ApiPathConstants.DOCS_PATH)
                         .filters(f -> f
                                 .rewritePath(ApiPathConstants.DOCS_REWRITE_REGEX, ApiPathConstants.DOCS_REWRITE_REPLACEMENT)
-                                .circuitBreaker(cb -> cb.setName("docsCircuitBreaker"))
                         )
                         .uri(featureFlagServiceUrl))
                 .build();
@@ -57,23 +52,22 @@ public class GatewayConfig {
 
     @Bean
     public RedisRateLimiter redisRateLimiter() {
-        return new RedisRateLimiter(10, 20); // replenishRate, burstCapacity
+        return new RedisRateLimiter(10, 20);
     }
 
     @Bean
     public KeyResolver userKeyResolver() {
-        return exchange -> Mono.just(
-                Objects.requireNonNull(exchange.getRequest().getRemoteAddress()).getAddress().getHostAddress()
-        );
+        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
     }
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:9000"));
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        corsConfig.setAllowedOrigins(origins);
         corsConfig.setMaxAge(3600L);
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.setAllowedHeaders(Arrays.asList("*"));
+        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        corsConfig.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With"));
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
