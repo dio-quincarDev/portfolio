@@ -28,6 +28,12 @@ public class GatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+                .route("auth-api", r -> r.path(ApiPathConstants.AUTH_PATH)
+                        .filters(f -> f
+                                .rewritePath(ApiPathConstants.AUTH_REWRITE_REGEX, ApiPathConstants.AUTH_REWRITE_REPLACEMENT)
+                        )
+                        .uri(featureFlagServiceUrl))
+
                 .route("feature-flag-actuator", r -> r.path("/api/v1/feature-flags/actuator/**")
                         .filters(f -> f
                                 .rewritePath("/api/v1/feature-flags/actuator/(?<segment>.*)", "/actuator/${segment}")

@@ -12,9 +12,9 @@ public class RouteValidator {
 
     // List of allowed public endpoints or open paths
     public static final List<String> openApiEndpoints = List.of(
-            "/auth/register",
-            "/auth/login",
-            "/eureka",
+            ApiPathConstants.REGISTER_ENDPOINT,
+            ApiPathConstants.REGISTER_SUPER_ADMIN_ENDPOINT,
+            ApiPathConstants.LOGIN_ENDPOINT,
             "/actuator"
     );
 
@@ -29,7 +29,6 @@ public class RouteValidator {
     public boolean isValidPath(String path) {
         return path.startsWith(ApiPathConstants.V1_PREFIX) || 
                path.startsWith("/feature-flags") ||
-               path.startsWith("/api/v1/demo") ||
                path.startsWith("/actuator") ||
                path.startsWith("/swagger-ui") ||
                path.startsWith("/v3/api-docs");
