@@ -112,6 +112,9 @@ jobs:
             set -e
             cd ~/portfolio
             
+            # Actualizar código del repo
+            git pull origin main
+            
             # Exportar variables indispensables
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             export TAG=${{ needs.backend-build.outputs.version }}
