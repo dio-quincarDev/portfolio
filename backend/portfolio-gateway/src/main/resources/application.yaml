@@ -5,6 +5,28 @@ spring:
   application:
     name: portfolio-gateway
 
+  # ==================== RUTAS DEL API GATEWAY ====================
+  cloud:
+    gateway:
+      routes:
+        # 1. Rutas para la API de Feature Flags (Backend)
+        - id: feature-flag-api
+          uri: ${APP_SERVICES_FEATURE_FLAG_API_URL:http://portfolio-backend:8081}
+          predicates:
+            - Path=/api/**, /feature-flags/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: featureFlagCircuitBreaker
+                fallbackUri: forward:/fallback/api
+
+        # 2. Ruta por defecto para la UI de Quasar (Frontend)
+        # IMPORTANTE: Esta regla va AL FINAL para que no pise las rutas de la API
+        - id: portfolio-frontend
+          uri: http://portfolio-frontend:80
+          predicates:
+            - Path=/**
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -17,10 +39,10 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-    urls:
-      - name: Feature Flag API
-        url: /feature-flags/v3/api-docs
-        displayName: Feature Flag API
+  urls:
+    - name: Feature Flag API
+      url: /feature-flags/v3/api-docs
+      displayName: Feature Flag API
 
 # Resilience4j Configuration
 resilience4j:

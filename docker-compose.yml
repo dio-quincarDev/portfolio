@@ -9,8 +9,7 @@ services:
     restart: on-failure
     networks:
       - portfolio-global-network
-    ports:
-      - "${FRONTEND_PORT:-9000}:80" # Quasar built as SPA served by Nginx on port 80
+    # Eliminamos la línea "ports" para que no se exponga al exterior
     depends_on:
       gateway:
         condition: service_healthy
@@ -27,11 +26,11 @@ services:
       - portfolio-global-network
       - portfolio-internal-network
     ports:
-      - "${GATEWAY_PORT:-8080}:8080"
+      - "8080:8080" # Este es el puerto que leerá el Load Balancer
     environment:
       - REDIS_HOST=portfolio-redis
       - APP_SERVICES_FEATURE_FLAG_API_URL=http://portfolio-backend:8081
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:9000}
+      - CORS_ALLOWED_ORIGINS=https://dioquincar.dev
       - SERVER_PORT=8080
     depends_on:
       backend:
@@ -59,7 +58,7 @@ services:
     environment:
       - SERVER_PORT=8081
       - JWT_SECRET=${JWT_SECRET}
-      - GATEWAY_URL=http://localhost:${GATEWAY_PORT:-8080}
+      - GATEWAY_URL=http://localhost:8080
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
       interval: 15s
