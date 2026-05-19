@@ -1,0 +1,193 @@
+// app global css
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@300;400;700&display=swap');
+
+// CSS Custom Properties para theming dinámico
+:root {
+  --icon-color: #073b4c;
+  --header-bg: rgba(242, 239, 233, 0.95);
+  --header-border: rgba(7, 59, 76, 0.15);
+  --text-primary: #073b4c;
+  --text-secondary: rgba(7, 59, 76, 0.7);
+  --drawer-bg: rgba(242, 239, 233, 0.98);
+  --bg-color: #f2efe9;
+  --card-bg: #ffffff;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+.text-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h1, h2, h3, .text-h1, .text-h2, .text-h3, .text-h6 {
+  font-family: 'JetBrains Mono', monospace;
+  color: $secondary;
+  letter-spacing: -1px;
+}
+
+.tech-card {
+  background: white;
+  border: 2px solid $secondary;
+  border-radius: 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 1px solid rgba(7, 59, 76, 0.1);
+    pointer-events: none;
+  }
+}
+
+.border-glow-accent {
+  border: 2px solid $accent !important;
+  box-shadow: 4px 4px 0px $glow-accent;
+}
+
+.border-glow-primary {
+  border: 2px solid $primary !important;
+  box-shadow: 4px 4px 0px $glow-primary;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: $dominant;
+}
+::-webkit-scrollbar-thumb {
+  background: $secondary;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: $accent;
+}
+
+#q-app {
+  min-height: 100vh;
+}
+
+.cyber-button {
+  border: 2px solid $secondary;
+  border-radius: 0;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 0 15px var(--glow-primary);
+    transform: translateY(-2px);
+    
+    .q-icon {
+      transform: translateX(4px);
+    }
+  }
+
+  &.accent-border {
+    border-color: $accent;
+    &:hover {
+      box-shadow: 0 0 15px var(--glow-accent);
+    }
+  }
+}
+
+.terminal-header-form {
+  border-bottom: 2px solid $secondary;
+  background: rgba(7, 59, 76, 0.05);
+}
+
+// ============================================
+// DARK MODE - usando CSS Custom Properties
+// ============================================
+
+.body--dark {
+  --icon-color: #f2efe9;
+  --header-bg: rgba(6, 53, 69, 0.95);
+  --header-border: rgba(242, 239, 233, 0.15);
+  --text-primary: #f2efe9;
+  --text-secondary: rgba(242, 239, 233, 0.7);
+  --drawer-bg: rgba(6, 53, 69, 0.98);
+  --bg-color: #073b4c;
+  --card-bg: #094357;
+
+  background: var(--bg-color) !important;
+  color: var(--text-primary);
+
+  h1, h2, h3, .text-h1, .text-h2, .text-h3, .text-h6 {
+    color: var(--text-primary);
+  }
+
+  .tech-card {
+    background: var(--card-bg);
+    border-color: $dark-text-muted;
+
+    &::before {
+      border-color: $dark-border;
+    }
+  }
+
+  .border-glow-primary {
+    border-color: $dark-text-muted !important;
+    box-shadow: 4px 4px 0px rgba(242, 239, 233, 0.1);
+  }
+
+  .border-glow-accent {
+    border-color: $accent !important;
+    box-shadow: 4px 4px 0px $dark-glow;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-color);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: $dark-text-muted;
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: $accent;
+  }
+
+  .text-grey-6, .text-grey-7, .text-grey-8, .text-grey-9 {
+    color: $dark-text-muted !important;
+  }
+
+  // Header y Drawer con variables CSS
+  .noc-header {
+    background: var(--header-bg) !important;
+    border-bottom: 1px solid var(--header-border);
+    backdrop-filter: blur(12px);
+  }
+
+  .noc-drawer {
+    background: var(--drawer-bg) !important;
+    border-left: 1px solid var(--header-border);
+  }
+
+  // Sobreescribir todos los iconos y botones de Quasar
+  .q-icon, .q-btn, .q-item__label {
+    color: var(--icon-color) !important;
+  }
+
+  // Links específicos
+  .text-secondary {
+    color: var(--text-primary) !important;
+  }
+
+  // Toolbar specifics
+  .noc-toolbar {
+    background: transparent;
+  }
+}

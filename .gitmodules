@@ -1,0 +1,3 @@
+[submodule "backend/feat-flag-api-bytes-colabs"]
+	path = backend/feat-flag-api-bytes-colabs
+	url = https://github.com/dio-quincarDev/feat-flag-api-bytes-colabs.git

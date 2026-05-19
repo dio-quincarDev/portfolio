@@ -1,0 +1,12 @@
+node_modules
+.quasar
+.git
+.vscode
+*.log
+.env.local
+.env.*.local
+.DS_Store
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

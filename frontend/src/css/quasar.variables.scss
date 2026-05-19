@@ -1,0 +1,36 @@
+// Quasar Sass Variables
+// --------------------------------------------------
+
+$dominant : #f2efe9;
+$secondary: #073b4c;
+$accent   : #ef476f;
+
+$primary  : $secondary;
+$dark     : $secondary;
+
+$positive : #21ba45;
+$negative : #c10015;
+$info     : #31ccec;
+$warning  : #f2c037;
+
+$glow-primary: rgba(7, 59, 76, 0.2);
+$glow-accent : rgba(239, 71, 111, 0.2);
+
+:root {
+  --glow-primary: #{$glow-primary};
+  --glow-accent: #{$glow-accent};
+}
+
+.body--dark {
+  --glow-primary: rgba(242, 239, 233, 0.1);
+  --glow-accent: rgba(239, 71, 111, 0.4);
+}
+
+// Dark mode variants
+$dark-bg: #073b4c;
+$dark-card-bg: #094357;
+$dark-toolbar-bg: #063545;
+$dark-text: #f2efe9;
+$dark-text-muted: rgba(242, 239, 233, 0.7);
+$dark-border: rgba(242, 239, 233, 0.15);
+$dark-glow: rgba(239, 71, 111, 0.3);
