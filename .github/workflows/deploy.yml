@@ -178,43 +178,5 @@ jobs:
             # Levantar servicios con el nuevo .env y la configuración de red corregida
             docker compose up -d
             
-            # Limpieza agresiva de imágenes viejas
-            docker image prune -af
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Copy docker-compose.yml to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          port: 22
-          source: "docker-compose.yml"
-          target: "~/portfolio"
-
-      - name: Execute Remote Deploy Commands
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          port: 22
-          script: |
-            set -e
-            cd ~/portfolio
-            
-            # Exportar variables indispensables
-            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            export TAG=${{ needs.backend-build.outputs.version }}
-            
-            # Descargar imágenes nuevas de Docker Hub
-            docker compose pull
-            
-            # Levantar servicios
-            docker compose up -d
-            
             # Limpieza agresiva de imágenes viejas para proteger el disco de OCI
             docker image prune -af
