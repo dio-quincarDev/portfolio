@@ -2,16 +2,18 @@ spring:
   application:
     name: portfolio-gateway-test
   
-  # Redirigir URLs para evitar fallos de resolución de DNS (SERVFAIL) en el entorno de CI
   cloud:
     gateway:
       routes:
         - id: feature-flag-api
           uri: http://localhost:8081
+          predicates:
+            - Path=/api/**
         - id: portfolio-frontend
           uri: http://localhost:8082
+          predicates:
+            - Path=/**
 
-  # Configuración de Redis inofensiva para que el contexto cargue
   data:
     redis:
       host: localhost
@@ -22,9 +24,7 @@ management:
     health:
       show-details: always
   health:
-    # Deshabilitar solo el indicador de salud de Redis para evitar el status 503
     redis:
       enabled: false
-    # Mantener otros indicadores activos
     defaults:
       enabled: true
