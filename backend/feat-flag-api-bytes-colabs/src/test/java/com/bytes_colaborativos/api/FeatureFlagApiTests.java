@@ -1,9 +1,9 @@
-package com.bytes_colaborativos.feature_flag_api;
+package com.bytes_colaborativos.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = FeatureFlagApi.class)
 class FeatureFlagApiTests {
 
 	@Test
