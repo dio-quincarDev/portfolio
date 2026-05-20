@@ -101,6 +101,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Copy docker-compose.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: 22
+          source: "docker-compose.yml"
+          target: "~/portfolio"
+
       - name: Execute Remote Deploy Commands
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -111,9 +121,6 @@ jobs:
           script: |
             set -e
             cd ~/portfolio
-            
-            # Actualizar código del repo
-            git pull origin main
             
             # Exportar variables indispensables
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
