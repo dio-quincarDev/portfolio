@@ -25,6 +25,7 @@ services:
     networks:
       - portfolio-global-network
       - portfolio-internal-network
+      - proxy-network
     ports:
       - "8080:8080" # Este es el puerto que leerá el Load Balancer
     environment:
@@ -58,7 +59,7 @@ services:
     environment:
       - SERVER_PORT=8081
       - JWT_SECRET=${JWT_SECRET}
-      - GATEWAY_URL=http://localhost:8080
+      - GATEWAY_URL=http://portfolio-gateway:8080
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
       interval: 15s
@@ -93,3 +94,5 @@ networks:
     driver: bridge
   portfolio-internal-network:
     driver: bridge
+  proxy-network:
+    external: true

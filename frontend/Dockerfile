@@ -5,9 +5,16 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps --ignore-scripts
 COPY . .
 
-# Inyectar variable de entorno para el build de Quasar
+# Inyectar variables de entorno para el build de Quasar
 ARG VITE_API_BASE_URL
+ARG VITE_EMAILJS_PUBLIC_KEY
+ARG VITE_EMAILJS_SERVICE_ID
+ARG VITE_EMAILJS_TEMPLATE_ID
+
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_EMAILJS_PUBLIC_KEY=$VITE_EMAILJS_PUBLIC_KEY
+ENV VITE_EMAILJS_SERVICE_ID=$VITE_EMAILJS_SERVICE_ID
+ENV VITE_EMAILJS_TEMPLATE_ID=$VITE_EMAILJS_TEMPLATE_ID
 
 RUN npx quasar build
 

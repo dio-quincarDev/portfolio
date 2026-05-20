@@ -129,6 +129,9 @@ jobs:
           push: true
           build-args: |
             VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+            VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+            VITE_EMAILJS_SERVICE_ID=${{ secrets.VITE_EMAILJS_SERVICE_ID }}
+            VITE_EMAILJS_TEMPLATE_ID=${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/portfolio-frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/portfolio-frontend:${{ needs.backend-build.outputs.version }}
@@ -138,6 +141,45 @@ jobs:
     name: 🚀 Deploy via SSH to OCI
     runs-on: ubuntu-latest
     needs: [backend-build, docker-build-push, ci-validation]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: 22
+          source: "docker-compose.yml"
+          target: "~/portfolio"
+
+      - name: Execute Remote Deploy Commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd ~/portfolio
+            
+            # Crear archivo .env automáticamente con los secrets de GitHub
+            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "TAG=${{ needs.backend-build.outputs.version }}" >> .env
+            
+            # Descargar imágenes nuevas de Docker Hub
+            docker compose pull
+            
+            # Levantar servicios con el nuevo .env y la configuración de red corregida
+            docker compose up -d
+            
+            # Limpieza agresiva de imágenes viejas
+            docker image prune -af
 
     steps:
       - name: Checkout code
