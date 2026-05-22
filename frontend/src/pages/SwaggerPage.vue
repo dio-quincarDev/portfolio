@@ -9,10 +9,7 @@
         </div>
         <div class="text-h6 text-mono text-secondary">{{ $t('swagger.title') }}</div>
       </div>
-      <iframe
-        :src="swaggerUrl"
-        class="swagger-iframe-full"
-      ></iframe>
+      <iframe :src="swaggerUrl" class="swagger-iframe-full"></iframe>
     </div>
   </q-page>
 </template>
@@ -22,7 +19,7 @@ import { computed } from 'vue'
 
 const swaggerUrl = computed(() => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
-  return `${baseUrl}/swagger-ui.html`
+  return `${baseUrl}/webjars/swagger-ui/index.html`
 })
 </script>
 
@@ -35,7 +32,7 @@ const swaggerUrl = computed(() => {
   width: 100%;
   height: calc(100vh - 220px);
   border: none;
-  
+
   @media (max-width: 599px) {
     height: calc(100vh - 180px);
   }
