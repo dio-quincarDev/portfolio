@@ -9,6 +9,8 @@ services:
     restart: on-failure
     networks:
       - portfolio-global-network
+      - portfolio-internal-network
+      - proxy-network
     # Eliminamos la línea "ports" para que no se exponga al exterior
     depends_on:
       gateway:
