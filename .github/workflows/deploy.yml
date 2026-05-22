@@ -171,6 +171,7 @@ jobs:
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "TAG=${{ needs.backend-build.outputs.version }}" >> .env
+            echo "PUBLIC_GATEWAY_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
             
             # Descargar imágenes nuevas de Docker Hub
             docker compose pull

@@ -61,7 +61,7 @@ services:
     environment:
       - SERVER_PORT=8081
       - JWT_SECRET=${JWT_SECRET}
-      - GATEWAY_URL=http://portfolio-gateway:8080
+      - GATEWAY_URL=${PUBLIC_GATEWAY_URL:-http://localhost:8080}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
       interval: 15s
