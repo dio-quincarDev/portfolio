@@ -37,6 +37,7 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
     disable-swagger-default-url: true
+    url: /feature-flags/v3/api-docs
   urls:
     - name: Feature Flag API
       url: /feature-flags/v3/api-docs
