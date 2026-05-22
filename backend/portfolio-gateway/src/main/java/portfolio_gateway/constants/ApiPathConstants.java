@@ -17,11 +17,6 @@ public class ApiPathConstants {
     // Demo Service
     public static final String DEMO_PATH = V1_PREFIX + "/demo/**";
 
-    // Swagger / Docs
-    public static final String DOCS_PATH = "/feature-flags/v3/api-docs**";
-    public static final String DOCS_REWRITE_REGEX = "/feature-flags/(?<segment>.*)";
-    public static final String DOCS_REWRITE_REPLACEMENT = "/${segment}";
-
     // Open API Endpoints (no require authentication)
     public static final String REGISTER_ENDPOINT = V1_PREFIX + "/auth/register";
     public static final String REGISTER_SUPER_ADMIN_ENDPOINT = V1_PREFIX + "/auth/register-super-admin";
