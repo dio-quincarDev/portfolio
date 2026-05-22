@@ -22,10 +22,6 @@ spring:
 
         # 2. Ruta por defecto para la UI de Quasar (Frontend)
         # IMPORTANTE: Esta regla va AL FINAL para que no pise las rutas de la API
-        - id: portfolio-frontend
-          uri: http://portfolio-frontend:80
-          predicates:
-            - Path=/**
 
   data:
     redis:
