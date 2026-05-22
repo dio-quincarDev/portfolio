@@ -19,7 +19,7 @@ import { computed } from 'vue'
 
 const swaggerUrl = computed(() => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
-  return `${baseUrl}/webjars/swagger-ui/index.html`
+  return `${baseUrl}/swagger-ui.html`
 })
 </script>
 
