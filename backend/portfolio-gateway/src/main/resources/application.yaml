@@ -18,7 +18,7 @@ spring:
 # Configuración de Swagger Agregado
 springdoc:
   api-docs:
-    enabled: false
+    enabled: true
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
