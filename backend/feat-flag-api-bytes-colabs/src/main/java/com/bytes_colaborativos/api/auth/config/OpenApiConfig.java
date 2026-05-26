@@ -18,15 +18,12 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${GATEWAY_URL:http://localhost:8080}")
-    private String gatewayUrl;
-
     @Bean
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "JWT";
 
         return new OpenAPI()
-                .servers(List.of(new Server().url(gatewayUrl).description("API Gateway")))
+                .addServersItem(new Server().url("/").description("Default Server"))
                 .info(new Info()
                         .title("Feature Flag API")
                         .version("1.0")
