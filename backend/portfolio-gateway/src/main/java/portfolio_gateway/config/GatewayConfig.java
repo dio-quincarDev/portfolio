@@ -43,6 +43,9 @@ public class GatewayConfig {
                                 .circuitBreaker(cb -> cb.setName("featureFlagCircuitBreaker").setFallbackUri("forward:/fallback/feature-flags"))
                         )
                         .uri(featureFlagServiceUrl))
+
+                .route("openapi-docs", r -> r.path("/v3/api-docs/**")
+                        .uri(featureFlagServiceUrl))
                 .build();
     }
 
