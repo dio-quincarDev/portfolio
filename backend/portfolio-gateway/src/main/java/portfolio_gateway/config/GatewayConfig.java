@@ -29,9 +29,6 @@ public class GatewayConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("auth-api", r -> r.path(ApiPathConstants.AUTH_PATH)
-                        .filters(f -> f
-                                .rewritePath(ApiPathConstants.AUTH_REWRITE_REGEX, ApiPathConstants.AUTH_REWRITE_REPLACEMENT)
-                        )
                         .uri(featureFlagServiceUrl))
 
                 .route("feature-flag-actuator", r -> r.path("/api/v1/feature-flags/actuator/**")
@@ -42,7 +39,6 @@ public class GatewayConfig {
 
                 .route("feature-flag-api", r -> r.path(ApiPathConstants.FEATURE_FLAGS_PATH)
                         .filters(f -> f
-                                .rewritePath(ApiPathConstants.FEATURE_FLAGS_REWRITE_REGEX, ApiPathConstants.FEATURE_FLAGS_REWRITE_REPLACEMENT)
                                 .requestRateLimiter(rl -> rl.setRateLimiter(redisRateLimiter()).setKeyResolver(userKeyResolver()))
                                 .circuitBreaker(cb -> cb.setName("featureFlagCircuitBreaker").setFallbackUri("forward:/fallback/feature-flags"))
                         )

@@ -15,19 +15,17 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
 
-# Configuración de Swagger Agregado
+# Configuración de Swagger
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-    disable-swagger-default-url: true
-    url: /api/v1/feature-flags/v3/api-docs
-  urls:
-    - name: Feature Flag API
-      url: /api/v1/feature-flags/v3/api-docs
-      displayName: Feature Flag API
+    urls:
+      - name: Feature Flag API
+        url: /api/v1/feature-flags/v3/api-docs
+        displayName: Feature Flag API
 
 # Resilience4j Configuration
 resilience4j:
