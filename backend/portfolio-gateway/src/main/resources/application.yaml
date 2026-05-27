@@ -18,13 +18,13 @@ spring:
 # Configuración de Swagger
 springdoc:
   api-docs:
-    enabled: false
+    path: /v3/api-docs-gateway
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
     urls:
       - name: Feature Flag API
-        url: /v3/api-docs
+        url: /v3/api-docs/
         displayName: Feature Flag API
 
 # Resilience4j Configuration
