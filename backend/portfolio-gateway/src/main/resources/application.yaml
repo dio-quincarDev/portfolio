@@ -24,7 +24,7 @@ springdoc:
     path: /swagger-ui.html
     urls:
       - name: Feature Flag API
-        url: /api/v1/feature-flags/v3/api-docs
+        url: /v3/api-docs
         displayName: Feature Flag API
 
 # Resilience4j Configuration
