@@ -44,7 +44,7 @@ public class GatewayConfig {
                         )
                         .uri(featureFlagServiceUrl))
 
-                .route("openapi-docs", r -> r.path("/v3/api-docs/**")
+                .route("openapi-docs", r -> r.path("/v3/api-docs/**", "/v3/api-docs")
                         .uri(featureFlagServiceUrl))
                 .build();
     }

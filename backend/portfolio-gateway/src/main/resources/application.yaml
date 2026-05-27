@@ -18,13 +18,13 @@ spring:
 # Configuración de Swagger
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
     urls:
       - name: Feature Flag API
-        url: /v3/api-docs
+        url: /v3/api-docs/
         displayName: Feature Flag API
 
 # Resilience4j Configuration
@@ -57,7 +57,7 @@ management:
       probes:
         enabled: true
     prometheus:
-      access: read_only
+      access: recovery_only
   prometheus:
     metrics:
       export:
