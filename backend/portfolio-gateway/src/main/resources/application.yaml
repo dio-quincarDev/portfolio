@@ -17,8 +17,6 @@ spring:
 
 # Configuración de Swagger
 springdoc:
-  api-docs:
-    path: /v3/api-docs-gateway
   swagger-ui:
     enabled: true
     path: /swagger-ui.html

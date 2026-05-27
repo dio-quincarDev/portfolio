@@ -17,7 +17,8 @@ public class RouteValidator {
             ApiPathConstants.LOGIN_ENDPOINT,
             "/actuator",
             "/v3/api-docs",
-            "/swagger-ui"
+            "/swagger-ui",
+            "/webjars"
     );
 
     public Predicate<ServerHttpRequest> isSecured =
