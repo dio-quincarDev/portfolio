@@ -1,10 +1,10 @@
 <template>
-  <q-page class="q-pa-lg q-pa-sm-md">
+  <q-page class="q-pa-md q-pa-lg-md">
     <!-- DASHBOARD GRID -->
-    <div class="row q-col-gutter-lg">
+    <div class="row q-col-gutter-md q-col-gutter-lg-md">
       <!-- HERO & TERMINAL SECTION (8 Cols) -->
       <div class="col-12 col-lg-8">
-        <div class="terminal-container tech-card q-pa-md border-glow-primary full-height">
+        <div class="terminal-container tech-card q-pa-sm q-pa-md-md border-glow-primary full-height">
           <div class="row items-center q-mb-sm border-bottom q-pb-xs">
             <div class="terminal-dots q-mr-md">
               <span class="dot primary-dot"></span>
@@ -14,29 +14,29 @@
             <div class="text-caption text-mono text-grey-7">{{ $t('hero.console') }}</div>
           </div>
 
-          <div class="terminal-content text-mono q-mt-md">
-            <div class="text-secondary text-h2 text-h3-sm q-mb-xs text-weight-bold">
+          <div class="terminal-content text-mono q-mt-sm q-mt-md-md">
+            <div class="text-secondary text-h4 text-h3-sm text-h2-md q-mb-xs text-weight-bold">
               {{ $t('hero.name') }}
             </div>
             <div
-              class="text-h6 text-grey-9 q-mb-lg text-weight-medium text-uppercase"
+              class="text-subtitle1 text-h6-sm text-grey-9 q-mb-md q-mb-lg-md text-weight-medium text-uppercase"
               style="letter-spacing: 2px"
             >
               {{ $t('hero.seniority') }}
             </div>
 
             <div class="typed-text">
-              <p class="q-ma-none text-grey-8">{{ $t('hero.systemStatus') }}</p>
-              <p class="q-ma-none text-primary text-weight-bold">{{ $t('hero.activeDev') }}</p>
-              <p class="q-ma-none text-secondary text-weight-bold">{{ $t('hero.stack') }}</p>
-              <p class="q-ma-none text-grey-9">{{ $t('hero.philosophy') }}</p>
-              <p class="q-ma-none text-grey-8 text-italic q-mt-xs" style="opacity: 0.8">
+              <p class="q-ma-none text-grey-8 text-caption text-body2-md">{{ $t('hero.systemStatus') }}</p>
+              <p class="q-ma-none text-primary text-weight-bold text-caption text-body2-md">{{ $t('hero.activeDev') }}</p>
+              <p class="q-ma-none text-secondary text-weight-bold text-caption text-body2-md">{{ $t('hero.stack') }}</p>
+              <p class="q-ma-none text-grey-9 text-caption text-body2-md">{{ $t('hero.philosophy') }}</p>
+              <p class="q-ma-none text-grey-8 text-italic q-mt-xs text-caption text-body2-md" style="opacity: 0.8">
                 {{ $t('hero.uiInterface') }}
               </p>
             </div>
           </div>
 
-          <div class="q-mt-xl row q-gutter-sm">
+          <div class="q-mt-lg q-mt-xl-md row q-gutter-sm full-width">
             <q-btn
               flat
               color="secondary"
@@ -44,6 +44,7 @@
               icon="account_tree"
               @click="scrollToProjects"
               class="cyber-button"
+              :class="{ 'full-width': $q.screen.lt.sm }"
             />
             <q-btn
               flat
@@ -52,6 +53,7 @@
               icon="terminal"
               @click="scrollToContact"
               class="cyber-button accent-border"
+              :class="{ 'full-width': $q.screen.lt.sm }"
             />
           </div>
         </div>
@@ -59,14 +61,23 @@
 
       <!-- SYSTEM STATUS TILE (4 Cols) -->
       <div class="col-12 col-lg-4">
-        <!-- Quick Service Stats Card -->
-        <div class="tech-card ecosystem-card q-pa-md col-auto full-height flex flex-center">
+        <div class="tech-card ecosystem-card q-pa-sm q-pa-md-md col-auto full-height flex flex-center">
           <div class="full-width">
             <div class="row items-center justify-between q-mb-md">
-              <div class="text-subtitle2 text-mono">{{ $t('health.ecosystem') }}</div>
+              <div class="row items-center q-gutter-xs">
+                <div class="text-caption text-subtitle2-md text-mono">{{ $t('health.ecosystem') }}</div>
+                <q-icon name="help_outline" size="14px" class="text-grey-6 cursor-help">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 4]">
+                    {{ $t('health.ecosystemTooltip') }}
+                  </q-tooltip>
+                </q-icon>
+              </div>
               <q-badge :color="healthStatus === 'UP' ? 'positive' : 'negative'" class="q-px-sm">
                 {{ healthStatus === 'UP' ? $t('health.operational') : $t('health.offline') }}
               </q-badge>
+            </div>
+            <div class="text-caption text-grey-7 q-mb-sm text-italic" style="line-height: 1.3">
+              {{ $t('health.ecosystemSub') }}
             </div>
 
             <div class="row q-col-gutter-sm q-mb-md">
@@ -101,26 +112,26 @@
         </div>
       </div>
 
-      <!-- OBSERVABILITY DASHBOARD (Full Width) -->
-      <div class="col-12">
-        <MetricsDashboard />
-      </div>
-
-      <!-- PROJECTS GRID -->
+      <!-- PROJECTS GRID (right after hero) -->
       <div id="projects-section" class="col-12">
-        <div class="row items-center q-mb-md">
+        <div class="row items-center q-mb-sm q-mb-md-md">
           <q-icon name="layers" color="secondary" size="sm" class="q-mr-sm" />
-          <div class="text-h5 text-mono">{{ $t('projects.title') }}</div>
+          <div class="text-subtitle1 text-h6-sm text-mono">{{ $t('projects.title') }}</div>
         </div>
-        <div class="row q-col-gutter-lg">
-          <div v-for="project in projects" :key="project.id" class="col-12 col-md-6">
+        <div class="row q-col-gutter-md q-col-gutter-lg-md">
+          <div v-for="project in projects" :key="project.id" class="col-12">
             <ProjectCard :project="project" />
           </div>
         </div>
       </div>
 
+      <!-- OBSERVABILITY DASHBOARD (after projects) -->
+      <div class="col-12">
+        <MetricsDashboard />
+      </div>
+
       <!-- CONTACT SECTION -->
-      <div id="contacto-section" class="col-12 q-mt-xl">
+      <div id="contacto-section" class="col-12 q-mt-lg q-mt-xl-md">
         <div class="text-center q-mb-md">
           <q-btn
             unelevated
@@ -128,7 +139,7 @@
             :label="contactExpanded ? $t('contact.close') : $t('contact.openLabel')"
             :icon="contactExpanded ? 'close' : 'mail'"
             @click="toggleContact"
-            class="cyber-button text-mono q-px-xl"
+            class="contact-toggle cyber-button text-mono q-px-xl"
             size="lg"
             :class="{ 'accent-border': !contactExpanded }"
           />
@@ -381,7 +392,10 @@ const sendContact = async () => {
 
 <style lang="scss" scoped>
 .terminal-container {
-  min-height: 350px;
+  min-height: 280px;
+  @media (min-width: 600px) {
+    min-height: 350px;
+  }
 }
 .border-bottom {
   border-bottom: 1px solid rgba(7, 59, 76, 0.1);
@@ -405,11 +419,18 @@ const sendContact = async () => {
   }
 }
 .terminal-content {
-  line-height: 1.8;
-  font-size: 1.1rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  @media (min-width: 600px) {
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
 }
 .ecosystem-card {
-  min-height: 150px;
+  min-height: 120px;
+  @media (min-width: 600px) {
+    min-height: 150px;
+  }
 }
 
 .slide-expand-enter-active,
@@ -422,5 +443,14 @@ const sendContact = async () => {
 .slide-expand-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+.contact-toggle {
+  &.bg-negative {
+    background: $negative !important;
+  }
+  &.bg-secondary {
+    background: $secondary !important;
+  }
 }
 </style>

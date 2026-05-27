@@ -1,17 +1,17 @@
 <template>
-  <div class="tech-card q-pa-md q-mb-lg border-glow-primary">
-    <div class="row items-center q-mb-lg justify-between">
-      <div class="row items-center">
+  <div class="tech-card q-pa-sm q-pa-md-md q-mb-lg border-glow-primary overflow-hidden">
+    <div class="row items-center q-mb-md q-mb-lg-md justify-between wrap q-gutter-sm">
+      <div class="row items-center q-gutter-sm wrap">
         <q-icon name="monitoring" color="secondary" size="sm" class="q-mr-sm" />
-        <div class="text-h5 text-mono">{{ $t('dashboard.title') }}</div>
-        <q-badge color="positive" class="q-ml-md pulse-badge" :label="liveLabel" />
+        <div class="text-subtitle1 text-h6-sm text-mono">{{ $t('dashboard.title') }}</div>
+        <q-badge color="positive" class="pulse-badge" :label="liveLabel" />
       </div>
       <q-btn
         flat
         dense
         color="accent"
         icon="bolt"
-        :label="$t('dashboard.stressTest')"
+        :label="$q.screen.lt.sm ? '' : $t('dashboard.stressTest')"
         @click="simulateStress"
         :loading="isStressing"
         class="border-glow-accent text-mono text-caption"
@@ -20,13 +20,23 @@
       </q-btn>
     </div>
 
-    <div class="row q-col-gutter-lg">
+    <div class="row q-col-gutter-md q-col-gutter-lg-md">
       <!-- Traffic Chart -->
       <div class="col-12 col-md-6">
-        <div class="text-subtitle2 text-mono q-mb-md">{{ $t('dashboard.traffic') }}</div>
+        <div class="row items-center q-mb-sm">
+          <div class="text-subtitle2 text-mono">{{ $t('dashboard.traffic') }}</div>
+          <q-icon name="help_outline" size="14px" class="q-ml-xs text-grey-6 cursor-help">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 4]">
+              {{ $t('dashboard.trafficTooltip') }}
+            </q-tooltip>
+          </q-icon>
+        </div>
+        <div class="text-caption text-grey-7 q-mb-sm text-italic" style="line-height: 1.3">
+          {{ $t('dashboard.trafficSub') }}
+        </div>
         <apexchart
           type="area"
-          height="180"
+          :height="chartHeight"
           :options="trafficChartOptions"
           :series="trafficSeries"
         />
@@ -34,8 +44,18 @@
 
       <!-- Circuit Breaker Status -->
       <div class="col-12 col-md-6">
-        <div class="text-subtitle2 text-mono q-mb-md">{{ $t('dashboard.circuitBreaker') }}</div>
-        <div class="circuit-card q-pa-md full-height">
+        <div class="row items-center q-mb-sm">
+          <div class="text-subtitle2 text-mono">{{ $t('dashboard.circuitBreaker') }}</div>
+          <q-icon name="help_outline" size="14px" class="q-ml-xs text-grey-6 cursor-help">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 4]">
+              {{ $t('dashboard.circuitBreakerTooltip') }}
+            </q-tooltip>
+          </q-icon>
+        </div>
+        <div class="text-caption text-grey-7 q-mb-sm text-italic" style="line-height: 1.3">
+          {{ $t('dashboard.circuitBreakerSub') }}
+        </div>
+        <div class="circuit-card q-pa-sm q-pa-md-md full-height">
           <div class="row items-center justify-between">
             <div class="text-caption text-mono">{{ $t('dashboard.state') }}: {{ status }}</div>
             <q-badge
@@ -44,7 +64,7 @@
               class="state-badge"
             />
           </div>
-          <div class="row q-col-gutter-md q-mt-md">
+          <div class="row q-col-gutter-x-xs q-col-gutter-md-md q-mt-md">
             <div class="col-4 text-center">
               <div class="text-h6 text-mono">{{ circuitMetrics.totalCalls }}</div>
               <div class="text-caption text-grey-7">{{ $t('dashboard.totalCalls') }}</div>
@@ -63,8 +83,18 @@
 
       <!-- JVM Resources -->
       <div class="col-12 col-md-4">
-        <div class="text-subtitle2 text-mono q-mb-md">{{ $t('dashboard.heapUsage') }}</div>
-        <div class="circuit-card q-pa-md">
+        <div class="row items-center q-mb-sm">
+          <div class="text-subtitle2 text-mono">{{ $t('dashboard.heapUsage') }}</div>
+          <q-icon name="help_outline" size="14px" class="q-ml-xs text-grey-6 cursor-help">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 4]">
+              {{ $t('dashboard.heapTooltip') }}
+            </q-tooltip>
+          </q-icon>
+        </div>
+        <div class="text-caption text-grey-7 q-mb-sm text-italic" style="line-height: 1.3">
+          {{ $t('dashboard.heapSub') }}
+        </div>
+        <div class="circuit-card q-pa-sm q-pa-md-md">
           <div class="row items-center justify-between q-mb-xs">
             <div class="text-caption text-mono">{{ heapData.used }}MB / {{ heapData.max }}MB</div>
             <div class="text-caption text-mono text-secondary">{{ heapData.percent }}%</div>
@@ -76,15 +106,22 @@
             class="q-mt-sm"
             size="10px"
           />
-          <div class="text-caption text-grey-7 q-mt-sm text-italic" style="font-size: 10px">
-            * OCI Free Tier Opt: Max 384MB
-          </div>
         </div>
       </div>
 
       <!-- Event Terminal -->
       <div class="col-12 col-md-8">
-        <div class="text-subtitle2 text-mono q-mb-md">{{ $t('dashboard.eventLog') }}</div>
+        <div class="row items-center q-mb-sm">
+          <div class="text-subtitle2 text-mono">{{ $t('dashboard.eventLog') }}</div>
+          <q-icon name="help_outline" size="14px" class="q-ml-xs text-grey-6 cursor-help">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 4]">
+              {{ $t('dashboard.eventTooltip') }}
+            </q-tooltip>
+          </q-icon>
+        </div>
+        <div class="text-caption text-grey-7 q-mb-sm text-italic" style="line-height: 1.3">
+          {{ $t('dashboard.eventSub') }}
+        </div>
         <div class="terminal-box q-pa-sm text-mono">
           <div v-for="(log, index) in eventLogs" :key="index" class="log-line" :class="log.type">
             <span class="text-grey-7">[{{ log.time }}]</span>
@@ -123,6 +160,8 @@ const trafficSeries = computed(() => [
     data: metrics.value.map((m) => [m.timestamp, m.requestsPerSecond || 0]),
   },
 ])
+
+const chartHeight = computed(() => $q.screen.lt.sm ? 150 : 180)
 
 const trafficChartOptions = computed(() => {
   const isDark = $q.dark.isActive
@@ -311,12 +350,16 @@ onBeforeUnmount(() => {
   background: #0d1117;
   color: #c9d1d9;
   border-radius: 4px;
-  height: 140px;
+  height: 100px;
   overflow-y: auto;
   font-size: 11px;
   line-height: 1.4;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 600px) {
+    height: 140px;
+  }
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
@@ -346,6 +389,9 @@ onBeforeUnmount(() => {
     background: #05070a;
     border-color: rgba(242, 239, 233, 0.15);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.8);
+  }
+  .cursor-help {
+    color: rgba(242, 239, 233, 0.5);
   }
 }
 

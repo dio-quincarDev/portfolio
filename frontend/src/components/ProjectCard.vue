@@ -1,5 +1,5 @@
 <template>
-  <q-card class="project-card q-mb-xl tech-card" :class="{ 'status-down': healthStatus === 'DOWN' }">
+  <q-card class="project-card tech-card" :class="{ 'status-down': healthStatus === 'DOWN' }">
     <q-card-section>
       <div class="row items-center justify-between">
         <div class="row items-center q-gutter-sm">
@@ -46,7 +46,7 @@
       </div>
     </q-card-section>
 
-    <q-card-section v-if="healthStatus === 'UP'" class="tech-card q-pa-md q-mt-sm">
+    <q-card-section v-if="healthStatus === 'UP'" class="tech-card q-pa-sm q-pa-md-md q-mt-sm">
       <div class="row q-col-gutter-md">
         <div class="col-12 col-sm-6">
           <div class="text-caption text-secondary">
