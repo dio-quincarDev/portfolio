@@ -2,7 +2,7 @@ export default {
   nav: {
     home: 'HOME',
     about: 'ABOUT',
-    twitter: 'TWITTER',
+    x: 'X',
     switchLang: 'Switch to English',
     switchLangLabel: 'ES / EN',
     toggleDark: 'Switch to dark mode',
@@ -10,12 +10,12 @@ export default {
   hero: {
     console: 'system_console — portfolio --v2.1',
     name: 'DIOGENES QUINTERO',
-    seniority: 'SOFTWARE ARCHITECT • BACKEND DEV',
+    seniority: 'BACKEND DEVELOPER',
     systemStatus: '$ systemctl status profile.service',
     activeDev: '● profile.service - Active Development',
     stack: 'CORE_STACK: Java • SQL • Spring Security • Docker • Software Architecture',
     philosophy: 'Philosophy: High availability, Security & Clean Code.',
-    uiInterface: 'UI_INTERFACE: Vue & Quasar Framework',
+    uiInterface: 'FRONTEND: Vue & Quasar Framework',
     coreProjects: 'Core Projects',
     contactProtocol: 'Contact Protocol',
   },
@@ -40,7 +40,8 @@ export default {
     uptime: 'Uptime',
     uptimeTooltip: 'Time elapsed since the last service startup',
     resetIn: 'Reset in: ',
-    resetTooltip: 'Service auto-resets every 30 min to simulate failures and test the circuit breaker (DEV only)',
+    resetTooltip:
+      'Service auto-resets every 30 min to simulate failures and test the circuit breaker (DEV only)',
     tryApi: 'Try API Live',
     hideSwagger: 'Hide Swagger',
     down: 'DOWN',
@@ -48,7 +49,8 @@ export default {
     viewVideo: 'View explanatory video',
     featureFlagApi: {
       name: 'Feature Flag API',
-      description: 'Dynamic feature control system (Feature Toggles) for distributed architectures. Allows activating/deactivating modules in real-time per environment or client without additional deployments.',
+      description:
+        'Dynamic feature control system (Feature Toggles) for distributed architectures. Allows activating/deactivating modules in real-time per environment or client without additional deployments.',
     },
   },
   contact: {

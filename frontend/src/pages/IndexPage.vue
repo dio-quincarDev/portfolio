@@ -15,8 +15,13 @@
           </div>
 
           <div class="terminal-content text-mono q-mt-md">
-            <div class="text-secondary text-h2 text-h3-sm q-mb-xs text-weight-bold">{{ $t('hero.name') }}</div>
-            <div class="text-h6 text-grey-9 q-mb-lg text-weight-medium text-uppercase" style="letter-spacing: 2px">
+            <div class="text-secondary text-h2 text-h3-sm q-mb-xs text-weight-bold">
+              {{ $t('hero.name') }}
+            </div>
+            <div
+              class="text-h6 text-grey-9 q-mb-lg text-weight-medium text-uppercase"
+              style="letter-spacing: 2px"
+            >
               {{ $t('hero.seniority') }}
             </div>
 
@@ -141,7 +146,7 @@
                 {{ $t('contact.title') }}
               </div>
             </div>
-            
+
             <div class="q-pa-md q-pa-lg-xl">
               <q-form @submit="sendContact" class="row q-col-gutter-lg">
                 <div class="col-12 col-md-6">
@@ -151,7 +156,7 @@
                     :label="$t('contact.name')"
                     class="text-mono"
                     color="secondary"
-                    :rules="[val => !!val || $t('contact.nameRequired')]"
+                    :rules="[(val) => !!val || $t('contact.nameRequired')]"
                   />
                 </div>
                 <div class="col-12 col-md-6">
@@ -162,11 +167,14 @@
                     type="email"
                     class="text-mono"
                     color="secondary"
-                    :rules="[val => !!val || $t('contact.emailRequired'), val => /.+@.+\..+/.test(val) || $t('contact.emailInvalid')]"
+                    :rules="[
+                      (val) => !!val || $t('contact.emailRequired'),
+                      (val) => /.+@.+\..+/.test(val) || $t('contact.emailInvalid'),
+                    ]"
                   />
                 </div>
 
-                <div class="col-12" style="display: none;" aria-hidden="true">
+                <div class="col-12" style="display: none" aria-hidden="true">
                   <input v-model="form.honeypot" tabindex="-1" autocomplete="off" />
                 </div>
 
@@ -178,7 +186,7 @@
                     type="textarea"
                     class="text-mono"
                     color="secondary"
-                    :rules="[val => !!val || $t('contact.messageRequired')]"
+                    :rules="[(val) => !!val || $t('contact.messageRequired')]"
                   />
                 </div>
                 <div class="col-12 text-center">
@@ -250,7 +258,7 @@ const projects = ref([
     swaggerPath: '/swagger-ui.html',
     serviceUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
     repoUrl: 'https://github.com/dio-quincarDev/feat-flag-api-bytes-colabs',
-    youtubeUrl: 'https://www.youtube.com/@qcoresystem',
+    youtubeUrl: 'https://youtu.be/cwE23zuhj8Q',
   },
 ])
 
@@ -344,7 +352,7 @@ const sendContact = async () => {
         name: form.name,
         from_email: form.email,
         message: form.message,
-      }
+      },
     )
 
     $q.notify({

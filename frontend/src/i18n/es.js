@@ -2,7 +2,7 @@ export default {
   nav: {
     home: 'INICIO',
     about: 'SOBRE MÍ',
-    twitter: 'TWITTER',
+    x: 'X',
     switchLang: 'Cambiar a Inglés',
     switchLangLabel: 'EN / ES',
     toggleDark: 'Cambiar a modo oscuro',
@@ -10,16 +10,16 @@ export default {
   hero: {
     console: 'system_console — portfolio --v2.1',
     name: 'DIOGENES QUINTERO',
-    seniority: 'ARQUITECTO DE SOFTWARE • DESARROLLO BACKEND',
+    seniority: ' DESARROLLO BACKEND ',
     systemStatus: '$ systemctl status profile.service',
     activeDev: '● profile.service - Desarrollo Activo',
-    stack: 'CORE_STACK: Java • SQL • Spring Security • Docker • Arquitectura de Software',
+    stack: 'STACK_PRINCIPAL: Java • SQL • Spring Security • Docker • Arquitectura de Software',
     philosophy: 'Filosofía: Alta disponibilidad, Seguridad y Código Limpio.',
-    uiInterface: 'UI_INTERFACE: Vue & Quasar Framework',
+    uiInterface: 'FRONTEND: Vue & Quasar Framework',
     coreProjects: 'Proyectos Principales',
     contactProtocol: 'Protocolo de Contacto',
   },
-health: {
+  health: {
     ecosystem: 'ECOSYSTEM_HEALTH',
     operational: 'OPERATIONAL',
     offline: 'OFFLINE',
@@ -40,7 +40,8 @@ health: {
     uptime: 'Uptime',
     uptimeTooltip: 'Tiempo transcurrido desde el último arranque del servicio',
     resetIn: 'Reset en: ',
-    resetTooltip: 'El servicio se reinicia cada 30 min para simular fallos y probar el circuit breaker (solo en DEV)',
+    resetTooltip:
+      'El servicio se reinicia cada 30 min para simular fallos y probar el circuit breaker (solo en DEV)',
     tryApi: 'Probar API en vivo',
     hideSwagger: 'Ocultar Swagger',
     down: 'DOWN',
@@ -48,7 +49,8 @@ health: {
     viewVideo: 'Ver video explicativo',
     featureFlagApi: {
       name: 'Feature Flag API',
-      description: 'Sistema de control dinámico de funcionalidades (Feature Toggles) para arquitecturas distribuidas. Permite activar/desactivar módulos en tiempo real por entorno o cliente sin despliegues adicionales.',
+      description:
+        'Sistema de control dinámico de funcionalidades (Feature Toggles) para arquitecturas distribuidas. Permite activar/desactivar módulos en tiempo real por entorno o cliente sin despliegues adicionales.',
     },
   },
   contact: {
