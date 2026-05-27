@@ -23,6 +23,7 @@ public class OpenApiConfig {
         final String securitySchemeName = "JWT";
 
         return new OpenAPI()
+                .addServersItem(new Server().url("/").description("Default Server"))
                 .info(new Info()
                         .title("Feature Flag API")
                         .version("1.0")
