@@ -173,23 +173,10 @@ const uptimeFormatted = computed(() => {
 })
 
 const resetCountdown = computed(() => {
-  // We use uptimeSeconds just as a trigger to re-calculate every poll
-  // but we base the calculation on the absolute wall clock
-  void uptimeSeconds.value
-  const now = new Date()
-  const mins = now.getMinutes()
-  const secs = now.getSeconds()
-  
-  const totalSecondsIn30Min = 1800
-  const secondsPassedInPeriod = (mins % 30) * 60 + secs
-  const remaining = totalSecondsIn30Min - secondsPassedInPeriod
-  
+  const elapsedInPeriod = uptimeSeconds.value % 1800
+  const remaining = 1800 - elapsedInPeriod
   const m = Math.floor(remaining / 60)
   const s = remaining % 60
-  
-  // If it just hit 0, show 30:00 for the next cycle
-  if (remaining <= 0) return '30:00'
-  
   return `${m}:${s.toString().padStart(2, '0')}`
 })
 

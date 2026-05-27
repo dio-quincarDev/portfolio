@@ -251,7 +251,7 @@ emailjs.init({
 const healthStatus = ref('DOWN')
 const currentUptime = ref('--')
 const responseTime = ref(0)
-const uptimeSeconds = ref(0)
+const startTime = ref(Date.now())
 
 const projects = ref([
   {
@@ -276,42 +276,30 @@ const projects = ref([
 const checkHealth = async () => {
   const fetchStart = performance.now()
   try {
-    const [healthRes, uptimeRes] = await Promise.all([
-      api.get('/api/v1/feature-flags/actuator/health'),
-      api.get('/api/v1/feature-flags/actuator/metrics/process.uptime').catch(() => null)
-    ])
-    
-    healthStatus.value = healthRes.data.status
+    const response = await api.get('/actuator/health')
+    healthStatus.value = response.data.status
     responseTime.value = Math.round(performance.now() - fetchStart)
-    
-    if (uptimeRes && uptimeRes.data && uptimeRes.data.measurements) {
-      uptimeSeconds.value = uptimeRes.data.measurements[0].value
-      updateUptimeDisplay()
+    if (!startTime.value) {
+      startTime.value = Date.now()
     }
+    updateUptime()
   } catch {
     healthStatus.value = 'DOWN'
   }
 }
 
-const updateUptimeDisplay = () => {
-  const totalSeconds = uptimeSeconds.value
-  const days = Math.floor(totalSeconds / 86400)
-  const hours = Math.floor((totalSeconds % 86400) / 3600)
-  const mins = Math.floor((totalSeconds % 3600) / 60)
-  
+const updateUptime = () => {
+  if (!startTime.value) return
+  const diff = Date.now() - startTime.value
+  const days = Math.floor(diff / 86400000)
+  const hours = Math.floor((diff % 86400000) / 3600000)
+  const mins = Math.floor((diff % 3600000) / 60000)
   if (days > 0) {
     currentUptime.value = `${days}d ${hours}h`
   } else if (hours > 0) {
     currentUptime.value = `${hours}h ${mins}m`
   } else {
     currentUptime.value = `${mins}m`
-  }
-}
-
-const updateUptime = () => {
-  if (healthStatus.value === 'UP') {
-    uptimeSeconds.value += 60
-    updateUptimeDisplay()
   }
 }
 

@@ -207,8 +207,8 @@ let intervalId = null
 async function fetchMetrics() {
   try {
     const [trafficRes, healthRes] = await Promise.all([
-      api.get('/api/v1/feature-flags/actuator/prometheus', { headers: { Accept: 'text/plain' } }).catch(() => ({ data: '' })),
-      api.get('/api/v1/feature-flags/actuator/health').catch(() => ({ data: { status: 'DOWN', components: { circuitBreakers: { details: { featureFlagCircuitBreaker: { status: 'UNKNOWN' } } } } } })),
+      api.get('/actuator/prometheus', { headers: { Accept: 'text/plain' } }).catch(() => ({ data: '' })),
+      api.get('/actuator/health').catch(() => ({ data: { status: 'DOWN', components: { circuitBreakers: { details: { featureFlagCircuitBreaker: { status: 'UNKNOWN' } } } } } })),
     ])
 
     // Update CB Status from Health
