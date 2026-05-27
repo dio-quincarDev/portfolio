@@ -56,7 +56,11 @@ public class GatewayConfig {
 
     @Bean
     public KeyResolver userKeyResolver() {
-        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostString());
+        return exchange -> {
+            var remoteAddress = exchange.getRequest().getRemoteAddress();
+            String host = (remoteAddress != null) ? remoteAddress.getHostString() : "unknown";
+            return Mono.just(host);
+        };
     }
 
     @Bean

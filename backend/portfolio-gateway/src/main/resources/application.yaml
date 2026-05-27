@@ -27,17 +27,6 @@ springdoc:
         url: /api/v1/feature-flags/v3/api-docs
         displayName: Feature Flag API
 
-# Configuración de Swagger
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    urls:
-      - name: Feature Flag API
-        url: /api/v1/feature-flags/v3/api-docs
-
 # Resilience4j Configuration
 resilience4j:
   circuitbreaker:
