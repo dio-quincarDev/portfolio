@@ -57,7 +57,7 @@ management:
       probes:
         enabled: true
     prometheus:
-      access: recovery_only
+      access: read_only
   prometheus:
     metrics:
       export:
