@@ -156,8 +156,12 @@ const lastBlockedCount = ref(0)
 
 const trafficSeries = computed(() => [
   {
-    name: 'Traffic',
-    data: metrics.value.map((m) => [m.timestamp, m.requestsPerSecond || 0]),
+    name: 'Success',
+    data: metrics.value.map((m) => [m.timestamp, m.successRps || 0]),
+  },
+  {
+    name: 'Blocked',
+    data: metrics.value.map((m) => [m.timestamp, m.blockedRps || 0]),
   },
 ])
 
@@ -175,12 +179,12 @@ const trafficChartOptions = computed(() => {
       toolbar: { show: false },
       animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 500 } },
     },
-    colors: ['#ef476f'],
-    fill: {
-      type: 'gradient',
-      gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1 },
-    },
-    stroke: { curve: 'smooth', width: 2 },
+      colors: ['#00e676', '#ef476f'],
+      fill: {
+        type: 'gradient',
+        gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1 },
+      },
+      stroke: { curve: 'smooth', width: 2 },
     xaxis: {
       type: 'datetime',
       labels: { style: { colors: textColor, fontSize: '10px' } },
@@ -197,7 +201,13 @@ const trafficChartOptions = computed(() => {
     tooltip: {
       theme: isDark ? 'dark' : 'light',
       x: { format: 'HH:mm:ss' },
-      y: { formatter: (val) => `${val.toFixed(2)} req/s` },
+      shared: true,
+      y: {
+        formatter: (val, { seriesIndex }) => {
+          const label = seriesIndex === 0 ? 'OK' : 'BLOCKED'
+          return `${val.toFixed(2)} req/s (${label})`
+        },
+      },
     },
   }
 })
@@ -263,15 +273,27 @@ function parsePrometheus(text) {
 
 function updateTrafficData(parsed) {
   const now = Date.now()
-  const totalRequests = parsed.requests.reduce((sum, p) => sum + p.calls, 0)
 
-  // Use a simpler moving average for the chart
-  const lastVal = metrics.value.length > 0 ? metrics.value[metrics.value.length - 1].total : totalRequests
-  const diff = Math.max(0, totalRequests - lastVal)
-  const rps = diff / 5 // interval is 5s
+  const successReqs = parsed.requests.filter(r => r.status === 'success').reduce((sum, p) => sum + p.calls, 0)
+  const blockedReqs = parsed.requests.filter(r => r.status === 'blocked').reduce((sum, p) => sum + p.calls, 0)
+  const errorReqs = parsed.requests.filter(r => r.status === 'error').reduce((sum, p) => sum + p.calls, 0)
+
+  const last = metrics.value.length > 0 ? metrics.value[metrics.value.length - 1] : null
+
+  const successDiff = Math.max(0, successReqs - (last?.totalSuccess || 0))
+  const blockedDiff = Math.max(0, blockedReqs - (last?.totalBlocked || 0))
+  const errorDiff = Math.max(0, errorReqs - (last?.totalError || 0))
 
   if (metrics.value.length > 20) metrics.value.shift()
-  metrics.value.push({ timestamp: now, requestsPerSecond: rps, total: totalRequests })
+  metrics.value.push({
+    timestamp: now,
+    successRps: successDiff / 5,
+    blockedRps: blockedDiff / 5,
+    errorRps: errorDiff / 5,
+    totalSuccess: successReqs,
+    totalBlocked: blockedReqs,
+    totalError: errorReqs,
+  })
 }
 
 function updateCircuitMetrics(parsed) {
@@ -310,7 +332,7 @@ async function simulateStress() {
   addLog('STRESS_TEST initiated: Firing 30 concurrent requests', 'info')
 
   const requests = Array.from({ length: 30 }).map(() =>
-    api.get('/api/v1/feature-flags/check?feature=Dark%20Mode&environment=PROD').catch(() => ({}))
+    api.get('/actuator/health').catch(() => ({}))
   )
 
   await Promise.all(requests)
