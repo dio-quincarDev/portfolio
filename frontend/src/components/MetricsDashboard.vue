@@ -251,7 +251,7 @@ function parsePrometheus(text) {
     .reduce((sum, l) => sum + (parseFloat(l.split(' ')[1]) || 0), 0)
 
   return {
-    requests: lines.filter(l => l.startsWith('portfolio_gateway_http_requests_total')).map(l => ({
+    requests: lines.filter(l => l.startsWith('spring_cloud_gateway_requests_total')).map(l => ({
       calls: parseFloat(l.split(' ')[1]) || 0,
       status: l.includes('status="2"') ? 'success' : (l.includes('status="429"') ? 'blocked' : 'error')
     })),

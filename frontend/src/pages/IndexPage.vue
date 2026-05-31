@@ -251,7 +251,7 @@ emailjs.init({
 const healthStatus = ref('DOWN')
 const currentUptime = ref('--')
 const responseTime = ref(0)
-const startTime = ref(Date.now())
+const startTime = ref(0)
 
 const projects = ref([
   {
@@ -276,10 +276,16 @@ const projects = ref([
 const checkHealth = async () => {
   const fetchStart = performance.now()
   try {
-    const response = await api.get('/actuator/health')
-    healthStatus.value = response.data.status
+    const [healthRes, uptimeRes] = await Promise.all([
+      api.get('/actuator/health'),
+      api.get('/actuator/metrics/process.uptime').catch(() => null),
+    ])
+    healthStatus.value = healthRes.data.status
     responseTime.value = Math.round(performance.now() - fetchStart)
-    if (!startTime.value) {
+    if (uptimeRes?.data?.measurements?.[0]?.value) {
+      const uptimeSeconds = uptimeRes.data.measurements[0].value
+      startTime.value = Date.now() - uptimeSeconds * 1000
+    } else if (!startTime.value) {
       startTime.value = Date.now()
     }
     updateUptime()
