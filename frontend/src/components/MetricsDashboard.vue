@@ -310,7 +310,7 @@ async function simulateStress() {
   addLog('STRESS_TEST initiated: Firing 30 concurrent requests', 'info')
 
   const requests = Array.from({ length: 30 }).map(() =>
-    api.get('/api/v1/feature-flags/check?name=demo&environment=PROD').catch(() => ({}))
+    api.get('/api/v1/feature-flags/check?feature=Dark%20Mode&environment=PROD').catch(() => ({}))
   )
 
   await Promise.all(requests)
