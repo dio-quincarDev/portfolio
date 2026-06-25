@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TerminalDots from 'components/TerminalDots.vue'
 
@@ -75,17 +75,23 @@ defineEmits(['scrollToPhilosophy', 'scrollToProjects', 'scrollToContact'])
 
 const { t } = useI18n()
 
-const taglineText = t('hero.tagline')
+const taglineText = computed(() => t('hero.tagline'))
 const displayedTagline = ref('')
 const taglineComplete = ref(false)
 
 async function typeTagline() {
-  for (let i = 0; i <= taglineText.length; i++) {
-    displayedTagline.value = taglineText.slice(0, i)
+  displayedTagline.value = ''
+  taglineComplete.value = false
+  for (let i = 0; i <= taglineText.value.length; i++) {
+    displayedTagline.value = taglineText.value.slice(0, i)
     await new Promise((r) => setTimeout(r, 18))
   }
   taglineComplete.value = true
 }
+
+watch(taglineText, () => {
+  typeTagline()
+})
 
 onMounted(() => {
   typeTagline()

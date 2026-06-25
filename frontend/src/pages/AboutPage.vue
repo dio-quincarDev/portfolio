@@ -58,8 +58,7 @@
       <div class="stack-body q-px-md q-pb-md">
         <div v-for="(item, i) in stackLines" :key="i" class="stack-line">
           <span class="stack-prompt">&gt;</span>
-          <span class="stack-label">{{ item.cat }}</span>
-          <span class="stack-value">{{ item.tech }}</span>
+          <span class="stack-text">{{ item }}</span>
         </div>
       </div>
     </div>
@@ -211,25 +210,9 @@ const stackLines = computed(() => [
   flex-shrink: 0;
 }
 
-.stack-label {
-  display: inline-block;
-  background: var(--stack-label-bg);
-  color: var(--stack-label-text);
-  padding: 2px 8px;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-  min-width: 110px;
-  text-align: center;
-  flex-shrink: 0;
-
-  @media (min-width: 600px) {
-    min-width: 140px;
-  }
-}
-
-.stack-value {
+.stack-text {
   color: var(--stack-value);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cv-btn {
