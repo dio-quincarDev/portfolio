@@ -177,7 +177,7 @@
     </q-drawer>
 
     <q-page-container>
-      <main id="main-content">
+      <main id="main-content" style="display: contents">
         <router-view />
       </main>
     </q-page-container>
