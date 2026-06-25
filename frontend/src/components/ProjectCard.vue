@@ -13,7 +13,9 @@
             :icon="mdiGithub"
             :href="project.repoUrl"
             target="_blank"
+            rel="noopener noreferrer"
             class="github-btn"
+            :aria-label="$t('projects.viewSource')"
           >
             <q-tooltip>{{ $t('projects.viewSource') }}</q-tooltip>
           </q-btn>
@@ -26,7 +28,9 @@
             :icon="mdiYoutube"
             :href="project.youtubeUrl"
             target="_blank"
+            rel="noopener noreferrer"
             class="youtube-btn"
+            :aria-label="$t('projects.viewVideo')"
           >
             <q-tooltip>{{ $t('projects.viewVideo') }}</q-tooltip>
           </q-btn>
@@ -36,6 +40,33 @@
         </q-badge>
       </div>
       <p class="text-body2 q-mt-sm">{{ projectDescription }}</p>
+
+      <!-- Case Study: Problem / Solution / Decisions -->
+      <div v-if="projectProblem" class="case-study q-mt-md">
+        <div class="case-study-block">
+          <div class="case-study-label text-accent text-caption text-weight-bold text-mono">
+            <q-icon name="warning" size="xs" class="q-mr-xs" />
+            {{ $t('projects.theProblem') }}
+          </div>
+          <p class="text-body2 text-grey-8 q-mb-none">{{ projectProblem }}</p>
+        </div>
+        <div class="case-study-block">
+          <div class="case-study-label text-secondary text-caption text-weight-bold text-mono">
+            <q-icon name="lightbulb" size="xs" class="q-mr-xs" />
+            {{ $t('projects.theSolution') }}
+          </div>
+          <p class="text-body2 text-grey-8 q-mb-none">{{ projectSolution }}</p>
+        </div>
+        <div v-if="projectDecisions && projectDecisions.length" class="case-study-block">
+          <div class="case-study-label text-secondary text-caption text-weight-bold text-mono">
+            <q-icon name="architecture" size="xs" class="q-mr-xs" />
+            {{ $t('projects.keyDecisions') }}
+          </div>
+          <ul class="decisions-list text-body2 text-grey-8">
+            <li v-for="(decision, i) in projectDecisions" :key="i">{{ decision }}</li>
+          </ul>
+        </div>
+      </div>
 
       <div class="tech-badges q-mt-md">
         <div v-for="tech in project.tech" :key="tech.name" class="tech-badge-item">
@@ -63,8 +94,8 @@
             class="q-mt-sm rounded-borders shadow-1"
           >
             <div class="absolute-full flex flex-center">
-              <div 
-                class="text-mono text-weight-bold text-no-wrap" 
+              <div
+                class="text-mono text-weight-bold text-no-wrap"
                 :class="$q.dark.isActive ? 'text-white' : 'text-secondary'"
                 style="font-size: 11px; line-height: 1;"
               >
@@ -93,30 +124,49 @@
       </div>
     </q-card-section>
 
-    <q-card-section :class="$q.screen.lt.sm ? 'q-pa-sm' : 'q-pa-md'">
-      <q-btn
-        color="accent"
-        :label="$t('projects.tryApi')"
-        @click="showSwagger = true"
-        :class="{ 'full-width': $q.screen.lt.sm }"
-      />
+    <q-card-section class="card-section-responsive">
+      <div class="row q-gutter-sm btn-responsive">
+        <q-btn
+          color="accent"
+          :label="$t('projects.tryApi')"
+          icon="api"
+          @click="showSwagger = true"
+          class="col"
+        />
+        <q-btn
+          v-if="project.repoUrl"
+          color="secondary"
+          :label="$t('projects.viewSource')"
+          icon="code"
+          :href="project.repoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          flat
+          class="col"
+        />
+      </div>
 
       <!-- SWAGGER FULLSCREEN DIALOG -->
       <q-dialog v-model="showSwagger" maximized transition-show="slide-up" transition-hide="slide-down">
         <q-card class="bg-dark text-white overflow-hidden">
           <q-bar class="bg-secondary q-py-lg">
-            <div class="text-h6 text-mono">{{ projectName }} - API Explorer</div>
-            <q-space />
-            <q-btn dense flat icon="close" v-close-popup>
-              <q-tooltip>Cerrar</q-tooltip>
-            </q-btn>
+            <div class="row items-center no-wrap full-width">
+              <div class="col">
+                <div class="text-h6 text-mono">{{ projectName }} — API Explorer</div>
+                <div class="text-caption text-grey-5">{{ $t('projects.swaggerDesc') }}</div>
+              </div>
+              <q-btn dense flat icon="close" v-close-popup aria-label="Close Swagger">
+                <q-tooltip>{{ $t('projects.hideSwagger') }}</q-tooltip>
+              </q-btn>
+            </div>
           </q-bar>
 
-          <q-card-section class="q-pa-none" style="height: calc(100vh - 48px)">
+          <q-card-section class="q-pa-none" style="height: calc(100vh - 56px)">
             <iframe
               :src="swaggerUrl"
               class="full-width full-height no-border"
               frameborder="0"
+              :title="$t('projects.swaggerIframeTitle')"
             ></iframe>
           </q-card-section>
         </q-card>
@@ -126,10 +176,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { api } from 'boot/axios.js'
 import { mdiGithub, mdiYoutube } from '@quasar/extras/mdi-v7'
 import { useI18n } from 'vue-i18n'
+import { useInterval } from 'quasar'
 
 const props = defineProps({
   project: {
@@ -139,6 +190,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { registerInterval } = useInterval()
 
 const projectName = computed(() => {
   return props.project.i18nKey ? t(props.project.i18nKey + '.name') : props.project.name || ''
@@ -148,12 +200,25 @@ const projectDescription = computed(() => {
   return props.project.i18nKey ? t(props.project.i18nKey + '.description') : props.project.description || ''
 })
 
+const projectProblem = computed(() => {
+  return props.project.i18nKey ? t(props.project.i18nKey + '.problem') : ''
+})
+
+const projectSolution = computed(() => {
+  return props.project.i18nKey ? t(props.project.i18nKey + '.solution') : ''
+})
+
+const projectDecisions = computed(() => {
+  if (!props.project.i18nKey) return []
+  const decisions = t(props.project.i18nKey + '.decisions')
+  return Array.isArray(decisions) ? decisions : []
+})
+
 const healthStatus = ref(null)
 const memoryUsedBytes = ref(0)
 const memoryMaxBytes = ref(0)
 const uptimeSeconds = ref(0)
 const showSwagger = ref(false)
-let intervalId = null
 
 const swaggerUrl = computed(() => `${props.project.baseUrl}${props.project.swaggerPath}`)
 const serviceUrl = computed(() => props.project.serviceUrl || props.project.baseUrl)
@@ -207,7 +272,7 @@ async function fetchMetrics() {
 function startPolling() {
   fetchHealth()
   fetchMetrics()
-  intervalId = setInterval(() => {
+  registerInterval(() => {
     fetchHealth()
     fetchMetrics()
   }, 5000)
@@ -216,15 +281,41 @@ function startPolling() {
 onMounted(() => {
   startPolling()
 })
-
-onBeforeUnmount(() => {
-  if (intervalId) clearInterval(intervalId)
-})
 </script>
 
 <style lang="scss" scoped>
 .project-card {
   border-left: 4px solid $accent;
+}
+
+.case-study {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.case-study-block {
+  padding: 10px 14px;
+  background: rgba(7, 59, 76, 0.03);
+  border-left: 3px solid $secondary;
+
+  :global(.body--dark) & {
+    background: rgba(242, 239, 233, 0.05);
+  }
+}
+
+.case-study-label {
+  margin-bottom: 4px;
+}
+
+.decisions-list {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+
+  li {
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
 }
 
 .text-caption {
@@ -243,6 +334,12 @@ onBeforeUnmount(() => {
   height: 40px;
   background: rgba(239, 71, 111, 0.1);
   border: 1px solid rgba(239, 71, 111, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(239, 71, 111, 0.3);
+  }
 }
 
 .github-btn, .youtube-btn {
@@ -265,6 +362,19 @@ onBeforeUnmount(() => {
   .tech-badge-item {
     background: rgba(239, 71, 111, 0.15);
     border-color: rgba(239, 71, 111, 0.4);
+  }
+}
+
+.card-section-responsive {
+  padding: 8px;
+  @media (min-width: 600px) {
+    padding: 16px;
+  }
+}
+
+.btn-responsive {
+  @media (max-width: 599px) {
+    width: 100%;
   }
 }
 </style>

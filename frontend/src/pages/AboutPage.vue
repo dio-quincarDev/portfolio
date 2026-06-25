@@ -1,84 +1,82 @@
 <template>
-  <q-page class="page-about q-pa-lg">
+  <q-page class="page-about q-pa-md q-pa-lg-lg">
     <!-- HEADER TERMINAL -->
     <div class="tech-card q-pa-lg q-mb-xl border-glow-primary">
       <div class="row items-center q-mb-sm border-bottom q-pb-xs">
-        <div class="terminal-dots q-mr-md">
-          <span class="dot primary-dot"></span>
-          <span class="dot primary-dot"></span>
-          <span class="dot accent-dot"></span>
-        </div>
+        <TerminalDots size="md" class="q-mr-md" />
         <div class="text-caption text-mono text-grey-7">about_me.exe — v3.4.1</div>
       </div>
       <div class="text-center q-mt-lg">
-        <div class="text-secondary text-h3 q-mb-xs">{{ $t('about.title') }}</div>
+        <h1 class="text-secondary text-h3 q-mb-xs" style="margin: 0">{{ $t('about.title') }}</h1>
         <div class="text-accent text-subtitle1 q-mb-lg">{{ $t('about.subtitle') }}</div>
-        <p class="text-body1 text-grey-8" style="max-width: 800px; margin: 0 auto;">
+        <p
+          class="text-body1 text-grey-8"
+          style="max-width: 700px; margin: 0 auto; line-height: 1.7"
+        >
           {{ $t('about.bio') }}
         </p>
       </div>
     </div>
 
-    <!-- SKILL CARDS -->
+    <!-- WHAT I BRING -->
     <div class="row q-col-gutter-lg q-mb-xl">
-      <div class="col-12 col-md-6">
+      <div class="col-12">
+        <div class="row items-center q-mb-md">
+          <q-icon name="emoji_objects" color="secondary" size="sm" class="q-mr-sm" />
+          <h2 class="text-subtitle1 text-h6-sm text-mono" style="margin: 0">{{ $t('about.whatIBring') }}</h2>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
         <div class="tech-card q-pa-lg skill-card">
-          <div class="row items-center q-mb-md">
-            <q-icon name="mdi-memory" size="40px" color="accent" class="q-mr-md" />
-            <div class="text-h6 text-secondary">{{ $t('about.card1Title') }}</div>
-          </div>
+          <q-icon name="mdi-memory" size="36px" color="accent" class="q-mb-md" />
+          <div class="text-h6 text-secondary q-mb-sm">{{ $t('about.card1Title') }}</div>
           <p class="text-body2 text-grey-7">{{ $t('about.card1Text') }}</p>
         </div>
       </div>
-
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-4">
         <div class="tech-card q-pa-lg skill-card">
-          <div class="row items-center q-mb-md">
-            <q-icon name="mdi-rocket-launch" size="40px" color="accent" class="q-mr-md" />
-            <div class="text-h6 text-secondary">{{ $t('about.card2Title') }}</div>
-          </div>
+          <q-icon name="mdi-rocket-launch" size="36px" color="accent" class="q-mb-md" />
+          <div class="text-h6 text-secondary q-mb-sm">{{ $t('about.card2Title') }}</div>
           <p class="text-body2 text-grey-7">{{ $t('about.card2Text') }}</p>
         </div>
       </div>
-
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-4">
         <div class="tech-card q-pa-lg skill-card">
-          <div class="row items-center q-mb-md">
-            <q-icon name="mdi-cube-outline" size="40px" color="accent" class="q-mr-md" />
-            <div class="text-h6 text-secondary">{{ $t('about.card3Title') }}</div>
-          </div>
+          <q-icon name="mdi-cube-outline" size="36px" color="accent" class="q-mb-md" />
+          <div class="text-h6 text-secondary q-mb-sm">{{ $t('about.card3Title') }}</div>
           <p class="text-body2 text-grey-7">{{ $t('about.card3Text') }}</p>
         </div>
       </div>
+    </div>
 
-      <div class="col-12 col-md-6">
-        <div class="tech-card q-pa-lg skill-card">
-          <div class="row items-center q-mb-md">
-            <q-icon name="mdi-shield-check" size="40px" color="accent" class="q-mr-md" />
-            <div class="text-h6 text-secondary">{{ $t('about.card4Title') }}</div>
-          </div>
-          <p class="text-body2 text-grey-7">{{ $t('about.card4Text') }}</p>
+    <!-- TECH STACK -->
+    <div class="tech-stack-card q-mb-xl">
+      <div class="stack-header row items-center q-pa-md">
+        <TerminalDots size="md" class="q-mr-md" />
+        <h2 class="text-caption text-mono stack-header-label" style="margin: 0">{{ $t('about.stackTitle') }}</h2>
+      </div>
+      <div class="stack-body q-px-md q-pb-md">
+        <div v-for="(item, i) in stackLines" :key="i" class="stack-line">
+          <span class="stack-prompt">&gt;</span>
+          <span class="stack-label">{{ item.cat }}</span>
+          <span class="stack-value">{{ item.tech }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ENGINEERING BANNER -->
-    <div class="tech-card q-pa-xl q-mb-xl text-center border-glow-accent">
-      <q-icon name="mdi-cog" size="50px" color="accent" class="q-mb-md" />
-      <div class="text-h5 text-secondary">{{ $t('about.engineering') }}</div>
-      <div class="text-h6 text-accent">{{ $t('about.engineeringSub') }}</div>
-    </div>
-
-    <!-- DOWNLOAD CV -->
+    <!-- CONNECT -->
     <div class="text-center q-pb-xl">
-      <div class="text-subtitle1 text-mono text-secondary q-mb-md">{{ $t('about.downloadCv') }}</div>
+      <div class="text-subtitle1 text-mono text-secondary q-mb-md">
+        {{ $t('about.connectTitle') }}
+      </div>
       <div class="row justify-center q-gutter-md">
         <q-btn
           color="accent"
           :label="$t('about.downloadCvEs')"
           href="/cv/Diógenes Quintero.CV.BACKEND.ES.pdf"
           download
-          class="border-glow-accent cv-btn"
+          icon="description"
+          class="cv-btn"
           flat
         />
         <q-btn
@@ -86,7 +84,28 @@
           :label="$t('about.downloadCvEn')"
           href="/cv/Diógenes Quintero.CV.BACKEND.EN.pdf"
           download
-          class="border-glow-primary cv-btn"
+          icon="description"
+          class="cv-btn"
+          flat
+        />
+        <q-btn
+          color="secondary"
+          label="LinkedIn"
+          icon="mdi-linkedin"
+          href="https://linkedin.com/in/dio-quincar"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cv-btn"
+          flat
+        />
+        <q-btn
+          color="secondary"
+          label="GitHub"
+          icon="mdi-github"
+          href="https://github.com/dio-quincarDev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cv-btn"
           flat
         />
       </div>
@@ -95,6 +114,35 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useMeta } from 'quasar'
+import { useI18n } from 'vue-i18n'
+import TerminalDots from 'components/TerminalDots.vue'
+
+const { t } = useI18n()
+
+useMeta({
+  title: () => t('about.metaTitle'),
+  meta: {
+    description: {
+      name: 'description',
+      content: t('about.bio'),
+    },
+  },
+})
+
+const stackLines = computed(() => [
+  t('about.stack.languages'),
+  t('about.stack.framework'),
+  t('about.stack.gateway'),
+  t('about.stack.database'),
+  t('about.stack.cache'),
+  t('about.stack.devops'),
+  t('about.stack.testing'),
+  t('about.stack.build'),
+  t('about.stack.security'),
+  t('about.stack.documentation'),
+])
 </script>
 
 <style lang="scss" scoped>
@@ -106,46 +154,86 @@
   border-bottom: 1px solid rgba(7, 59, 76, 0.1);
 }
 
-.terminal-dots {
-  display: flex;
-  gap: 6px;
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    &.primary-dot {
-      background: $primary;
-    }
-    &.accent-dot {
-      background: $accent;
-    }
-  }
-}
-
 .skill-card {
   height: 100%;
   transition: transform 0.3s ease;
+  border-top: 3px solid $accent;
   &:hover {
     transform: translateY(-5px);
   }
 }
 
-.cv-btn {
-  min-width: 200px;
-  border: 1px solid currentColor;
+.tech-stack-card {
+  border: 2px solid var(--stack-border);
+  border-left: 4px solid var(--stack-accent-bar);
+  background: transparent;
 }
 
-:global(.body--dark) {
-  .border-bottom {
-    border-bottom-color: rgba(242, 239, 233, 0.1);
+.stack-header {
+  border-bottom: 1px solid var(--stack-border);
+}
+
+.stack-header-label {
+  color: var(--stack-label-text);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 11px;
+}
+
+.stack-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.stack-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--stack-border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+
+  &:last-child {
+    border-bottom: none;
   }
 
-  .text-grey-7, .text-grey-8 {
-    color: var(--text-secondary) !important;
+  @media (min-width: 600px) {
+    font-size: 14px;
+    gap: 16px;
   }
+}
 
-  .text-secondary {
-    color: var(--text-primary) !important;
+.stack-prompt {
+  color: var(--stack-prompt);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stack-label {
+  display: inline-block;
+  background: var(--stack-label-bg);
+  color: var(--stack-label-text);
+  padding: 2px 8px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  min-width: 110px;
+  text-align: center;
+  flex-shrink: 0;
+
+  @media (min-width: 600px) {
+    min-width: 140px;
   }
+}
+
+.stack-value {
+  color: var(--stack-value);
+  font-weight: 700;
+}
+
+.cv-btn {
+  min-width: 160px;
+  border: 1px solid currentColor;
 }
 </style>

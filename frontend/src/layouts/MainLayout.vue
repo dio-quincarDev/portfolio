@@ -1,9 +1,10 @@
 <template>
   <q-layout view="hHh lpR fFf">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <q-header class="noc-header">
       <q-toolbar dense class="noc-toolbar">
         <div class="row items-center no-wrap q-gutter-x-sm">
-          <img src="/icons/dq-logo.png" alt="Logo" class="logo-img" />
+          <img src="/icons/dq-logo.png" alt="Diógenes Quintero — Backend Java Developer" class="logo-img" />
           <div class="text-mono text-weight-bold text-secondary q-ml-xs">
             <span class="gt-xs">dioquincar.dev</span>
             <span class="lt-sm">dq.dev</span>
@@ -14,7 +15,7 @@
         <q-space />
 
         <div class="row items-center no-wrap q-gutter-x-xs lt-md">
-          <q-btn flat dense round icon="menu" color="secondary" @click="drawer = !drawer" />
+          <q-btn flat dense round icon="menu" color="secondary" @click="drawer = !drawer" :aria-label="$t('nav.toggleMenu')" />
         </div>
 
         <div class="row items-center no-wrap q-gutter-x-sm gt-xs">
@@ -38,6 +39,7 @@
             color="secondary"
             size="sm"
             @click="toggleLanguage"
+            :aria-label="$t('nav.switchLang')"
           >
             <q-tooltip>{{ $t('nav.switchLang') }}</q-tooltip>
           </q-btn>
@@ -50,6 +52,7 @@
             color="secondary"
             size="sm"
             @click="toggleDark"
+            :aria-label="$t('nav.toggleDark')"
           >
             <q-tooltip>{{ $t('nav.toggleDark') }}</q-tooltip>
           </q-btn>
@@ -60,16 +63,20 @@
             icon="mdi-github"
             href="https://github.com/dio-quincarDev"
             target="_blank"
+            rel="noopener noreferrer"
             color="secondary"
             size="sm"
+            aria-label="GitHub"
           />
           <q-btn
             flat
             round
             href="https://x.com/DioQuincar"
             target="_blank"
+            rel="noopener noreferrer"
             color="secondary"
             size="sm"
+            aria-label="X (Twitter)"
           >
             <q-icon size="18px">
               <svg
@@ -89,8 +96,10 @@
             icon="mdi-linkedin"
             href="https://linkedin.com/in/dio-quincar"
             target="_blank"
+            rel="noopener noreferrer"
             color="secondary"
             size="sm"
+            aria-label="LinkedIn"
           />
         </div>
       </q-toolbar>
@@ -111,6 +120,7 @@
           v-ripple
           href="https://github.com/dio-quincarDev"
           target="_blank"
+          rel="noopener noreferrer"
           @click="drawer = false"
         >
           <q-item-section avatar><q-icon name="mdi-github" color="secondary" /></q-item-section>
@@ -121,6 +131,7 @@
           v-ripple
           href="https://x.com/DioQuincar"
           target="_blank"
+          rel="noopener noreferrer"
           @click="drawer = false"
         >
           <q-item-section avatar>
@@ -143,6 +154,7 @@
           v-ripple
           href="https://linkedin.com/in/dio-quincar"
           target="_blank"
+          rel="noopener noreferrer"
           @click="drawer = false"
         >
           <q-item-section avatar><q-icon name="mdi-linkedin" color="secondary" /></q-item-section>
@@ -165,7 +177,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <main id="main-content">
+        <router-view />
+      </main>
     </q-page-container>
   </q-layout>
 </template>
