@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "Authentication & User Management", description = "Endpoints para autenticación y gestión de usuarios")
 @RequestMapping(ApiPathConstants.V1_ROUTE + ApiPathConstants.AUTH_ROUTE)
+@Tag(name = "Auth & User Management", description = "Autenticación y gestión de usuarios")
 public interface AuthApi {
 
     @Operation(summary = "Register a new user", description = "Creates a new user with the USER role.")

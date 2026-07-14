@@ -177,7 +177,7 @@ jobs:
             docker compose pull
             
             # Levantar servicios con el nuevo .env y la configuración de red corregida
-            docker compose up -d
+            docker compose up -d --remove-orphans
             
             # Limpieza agresiva de imágenes viejas para proteger el disco de OCI
             docker image prune -af
