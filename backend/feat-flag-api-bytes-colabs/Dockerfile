@@ -23,8 +23,8 @@ USER spring:spring
 # Copiamos el jar generado desde la etapa anterior
 COPY --from=builder /app/target/feature-flag-api-*.jar app.jar
 
-# El Gateway por defecto usa el 8080
-EXPOSE 8080
+# El Feature Flag API usa el 8081
+EXPOSE 8081
 
 # Parámetros optimizados para Java 21 en contenedores
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
