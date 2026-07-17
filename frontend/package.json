@@ -15,15 +15,11 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@quasar/extras": "^1.18.0",
-    "apexcharts": "^5.11.0",
-    "axios": "^1.16.0",
     "quasar": "^2.16.0",
     "vue": "^3.5.22",
     "vue-i18n": "^9.14.5",
-    "vue-router": "^5.0.3",
-    "vue3-apexcharts": "^1.11.1"
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

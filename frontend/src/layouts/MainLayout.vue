@@ -9,7 +9,6 @@
             <span class="gt-xs">dioquincar.dev</span>
             <span class="lt-sm">dq.dev</span>
           </div>
-          <span class="text-mono text-grey-7 text-caption gt-sm q-ml-md">// sys:online</span>
         </div>
 
         <q-space />
@@ -147,7 +146,7 @@
               </svg>
             </q-icon>
           </q-item-section>
-          <q-item-section class="text-mono">{{ $t('nav.x') }}</q-item-section>
+          <q-item-section class="text-mono">X</q-item-section>
         </q-item>
         <q-item
           clickable
@@ -163,7 +162,7 @@
         <q-separator class="q-my-sm" />
         <q-item clickable v-ripple @click="toggleLanguage">
           <q-item-section avatar><q-icon name="translate" color="secondary" /></q-item-section>
-          <q-item-section class="text-mono">{{ $t('nav.switchLangLabel') }}</q-item-section>
+          <q-item-section class="text-mono">ES / EN</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="toggleDark">
           <q-item-section avatar>
@@ -222,6 +221,7 @@ provide('isSpanish', isSpanish)
   background: var(--header-bg) !important;
   border-bottom: 1px solid var(--header-border);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .noc-toolbar {
@@ -241,15 +241,20 @@ provide('isSpanish', isSpanish)
 }
 
 .nav-btn {
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 1px;
-  color: var(--text-secondary);
+  color: var(--text);
   padding: 4px 12px;
   border: 1px solid transparent;
-  transition: all 0.2s;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 
   &:hover {
-    color: $accent;
+    color: var(--accent);
     border-color: rgba(239, 71, 111, 0.3);
     background: rgba(239, 71, 111, 0.05);
   }

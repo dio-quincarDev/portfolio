@@ -1,155 +1,172 @@
 <template>
-  <div class="terminal-container tech-card q-pa-sm q-pa-md-md border-glow-primary full-height">
-    <div class="row items-center q-mb-sm border-bottom q-pb-xs">
-      <TerminalDots size="md" class="q-mr-md" />
-      <div class="text-caption text-mono text-grey-7">{{ $t('hero.console') }}</div>
-    </div>
+  <section class="hero" aria-labelledby="hero-name">
+    <div class="hero__layout">
+      <div class="hero__main">
+        <p class="hero__eyebrow reveal-left stagger-1">{{ $t('hero.title') }}</p>
+        <h1 id="hero-name" class="hero__name display reveal stagger-2">{{ $t('hero.name') }}</h1>
+        <hr class="accent-bar reveal stagger-3" aria-hidden="true" />
+        <p class="hero__tagline reveal stagger-4">{{ $t('hero.tagline') }}</p>
 
-    <div class="terminal-content text-mono q-mt-sm q-mt-md-md">
-      <h1 class="text-secondary text-h4 text-h3-sm text-h2-md q-mb-xs text-weight-bold" style="margin: 0; line-height: 1.2;">
-        {{ $t('hero.name') }}
-      </h1>
-      <div
-        class="text-subtitle1 text-h6-sm text-accent q-mb-md q-mb-lg-md text-weight-medium text-uppercase"
-        style="letter-spacing: 2px"
-      >
-        {{ $t('hero.seniority') }}
-      </div>
-
-      <p class="tagline text-grey-8 text-body1 text-body2-md text-h6-md q-mb-lg q-mb-xl-md" style="max-width: 580px; line-height: 1.6; min-height: 3em;">
-        {{ displayedTagline }}<span v-if="!taglineComplete" class="typing-cursor">|</span>
-      </p>
-
-      <div class="row q-col-gutter-md q-mb-lg">
-        <div class="col-6">
-          <div class="stat-value text-secondary text-h5 text-h4-md">{{ currentUptime }}</div>
-          <div class="stat-label text-grey-7 text-caption">{{ $t('health.uptime') }}</div>
-        </div>
-        <div class="col-6">
-          <div class="stat-value text-secondary text-h5 text-h4-md">{{ responseTime }}ms</div>
-          <div class="stat-label text-grey-7 text-caption">{{ $t('health.responseTime') }}</div>
+        <div class="hero__actions reveal stagger-5">
+          <button class="btn btn--primary" type="button" @click="$emit('scrollToProjects')">
+            {{ $t('hero.cta.projects') }}
+          </button>
+          <button class="btn btn--outline" type="button" @click="$emit('scrollToPhilosophy')">
+            {{ $t('hero.cta.philosophy') }}
+          </button>
+          <button class="btn btn--accent-outline" type="button" @click="$emit('scrollToContact')">
+            {{ $t('hero.cta.contact') }}
+          </button>
         </div>
       </div>
-    </div>
 
-    <div class="row q-gutter-sm full-width">
-      <q-btn
-        flat
-        color="secondary"
-        :label="$t('hero.howIWork')"
-        icon="psychology"
-        @click="$emit('scrollToPhilosophy')"
-        class="cyber-button btn-responsive"
-      />
-      <q-btn
-        flat
-        color="secondary"
-        :label="$t('hero.coreProjects')"
-        icon="account_tree"
-        @click="$emit('scrollToProjects')"
-        class="cyber-button btn-responsive"
-      />
-      <q-btn
-        flat
-        color="accent"
-        :label="$t('hero.contactProtocol')"
-        icon="terminal"
-        @click="$emit('scrollToContact')"
-        class="cyber-button accent-border btn-responsive"
-      />
+      <div class="hero__stats reveal stagger-6">
+        <div class="hero__stat">
+          <span class="hero__stat-value display">3+</span>
+          <span class="hero__stat-label">{{ $t('hero.stat.systems') }}</span>
+        </div>
+        <div class="hero__stat-divider" aria-hidden="true"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-value display">$0</span>
+          <span class="hero__stat-label">{{ $t('hero.stat.freeTier') }}</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import TerminalDots from 'components/TerminalDots.vue'
-
-defineProps({
-  currentUptime: { type: String, default: '--' },
-  responseTime: { type: Number, default: 0 },
-})
-
 defineEmits(['scrollToPhilosophy', 'scrollToProjects', 'scrollToContact'])
-
-const { t } = useI18n()
-
-const taglineText = computed(() => t('hero.tagline'))
-const displayedTagline = ref('')
-const taglineComplete = ref(false)
-
-async function typeTagline() {
-  displayedTagline.value = ''
-  taglineComplete.value = false
-  for (let i = 0; i <= taglineText.value.length; i++) {
-    displayedTagline.value = taglineText.value.slice(0, i)
-    await new Promise((r) => setTimeout(r, 18))
-  }
-  taglineComplete.value = true
-}
-
-watch(taglineText, () => {
-  typeTagline()
-})
-
-onMounted(() => {
-  typeTagline()
-})
 </script>
 
-<style lang="scss" scoped>
-.terminal-container {
-  min-height: 320px;
-  @media (min-width: 600px) {
-    min-height: 380px;
+<style scoped>
+.hero {
+  padding: 48px 0 32px;
+  position: relative;
+
+  @media (min-width: 1024px) {
+    padding: 80px 0 48px;
   }
 }
-.border-bottom {
-  border-bottom: 1px solid rgba(7, 59, 76, 0.1);
+
+.hero__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1.6fr 1fr;
+    gap: 48px;
+  }
 }
-.terminal-content {
+
+.hero__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.hero__name {
+  font-size: 36px;
+  line-height: 1.1;
+  margin: 0 0 8px;
+  color: var(--text);
+
+  @media (min-width: 768px) {
+    font-size: 48px;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 56px;
+  }
+}
+
+.hero__tagline {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
   line-height: 1.7;
-  font-size: 0.95rem;
-  @media (min-width: 600px) {
-    line-height: 1.8;
-    font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 20px 0 32px;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 599px) {
+  .hero__actions .btn {
+    flex: 1 1 100%;
   }
 }
-.tagline {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.3px;
+
+.hero__stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  @media (min-width: 1024px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid var(--border);
+    padding: 0 0 0 32px;
+  }
 }
-.typing-cursor {
-  display: inline-block;
-  color: $accent;
-  font-weight: 700;
-  animation: blink 0.8s step-end infinite;
+
+.hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+
+  @media (min-width: 1024px) {
+    padding: 20px 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
 }
-@keyframes blink {
-  50% { opacity: 0; }
+
+.hero__stat-value {
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--accent);
+
+  @media (min-width: 768px) {
+    font-size: 32px;
+  }
 }
-.stat-value {
+
+.hero__stat-label {
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.stat-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
   letter-spacing: 0.5px;
-  margin-top: 2px;
+  text-transform: uppercase;
 }
 
-.btn-responsive {
-  @media (max-width: 599px) {
-    width: 100%;
-  }
-}
+.hero__stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
 
-:global(.body--dark) {
-  .border-bottom {
-    border-bottom-color: rgba(242, 239, 233, 0.1);
+  @media (min-width: 1024px) {
+    width: auto;
+    height: 1px;
   }
 }
 </style>

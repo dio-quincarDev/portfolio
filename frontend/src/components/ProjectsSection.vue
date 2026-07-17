@@ -1,21 +1,49 @@
 <template>
-  <div id="projects-section" class="col-12 animate-on-scroll">
-    <div class="row items-center q-mb-sm q-mb-md-md">
-      <q-icon name="layers" color="secondary" size="sm" class="q-mr-sm" />
-      <h2 class="text-subtitle1 text-h6-sm text-mono" style="margin: 0">{{ $t('projects.title') }}</h2>
+  <section id="projects-section" class="projects reveal">
+    <SectionHeader :eyebrow="$t('projects.eyebrow')" :title="$t('projects.title')" />
+
+    <div class="projects__grid">
+      <ProjectCard
+        v-for="(project, i) in projects"
+        :key="project.id"
+        :project="project"
+        class="projects__item reveal"
+        :class="[
+          `stagger-${i + 1}`,
+          { 'projects__item--wide': i === 0 },
+        ]"
+      />
     </div>
-    <div class="row q-col-gutter-md q-col-gutter-lg-md">
-      <div v-for="project in projects" :key="project.id" class="col-12">
-        <ProjectCard :project="project" />
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
+import SectionHeader from 'components/SectionHeader.vue'
 import ProjectCard from 'components/ProjectCard.vue'
 
 defineProps({
   projects: { type: Array, required: true },
 })
 </script>
+
+<style scoped>
+.projects__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .projects__grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .projects__item--wide {
+    grid-column: span 6;
+  }
+
+  .projects__item:not(.projects__item--wide) {
+    grid-column: span 3;
+  }
+}
+</style>
