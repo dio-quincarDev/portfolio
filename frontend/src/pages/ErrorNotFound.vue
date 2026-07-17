@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="error-card text-center">
-      <div class="error-card__code display">404</div>
+      <h1 class="error-card__code display">404</h1>
       <div class="error-card__msg">{{ $t('errors.notFound') }}</div>
       <q-btn class="btn btn--primary" :label="$t('errors.goHome')" icon="home" to="/" />
     </div>

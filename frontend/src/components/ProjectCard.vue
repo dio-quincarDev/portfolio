@@ -1,8 +1,17 @@
 <template>
-  <article class="project-card card" :aria-label="projectName">
+  <div
+    class="project-card"
+    :class="{ 'project-card--coming': project.comingSoon }"
+    role="button"
+    tabindex="0"
+    :aria-label="cardLabel"
+    @click="$emit('select', project.id)"
+    @keydown.enter="$emit('select', project.id)"
+    @keydown.space.prevent="$emit('select', project.id)"
+  >
     <div class="project-card__head">
-      <h3 class="project-card__name">{{ projectName }}</h3>
-      <div class="project-card__links">
+      <h3 class="project-card__name">{{ cardTitle }}</h3>
+      <div v-if="!project.comingSoon" class="project-card__links" @click.stop>
         <a
           v-if="project.repoUrl"
           class="project-card__icon-link"
@@ -26,42 +35,27 @@
       </div>
     </div>
 
-    <p class="project-card__desc">{{ projectDescription }}</p>
+    <p class="project-card__desc">{{ cardDescription }}</p>
 
-    <div v-if="projectProblem" class="project-card__case">
-      <div class="case-block">
-        <div class="case-block__label case-block__label--problem">
-          {{ $t('projects.theProblem') }}
-        </div>
-        <p class="case-block__text">{{ projectProblem }}</p>
+    <template v-if="!project.comingSoon">
+      <div class="project-card__tech">
+        <span
+          v-for="tech in project.tech.slice(0, 4)"
+          :key="tech.name"
+          class="tech-chip"
+          :aria-label="tech.name"
+        >
+          <span class="tech-chip__dot" aria-hidden="true"></span>
+          {{ tech.name }}
+        </span>
+        <span v-if="project.tech.length > 4" class="tech-chip tech-chip--more">
+          +{{ project.tech.length - 4 }}
+        </span>
       </div>
-      <div class="case-block">
-        <div class="case-block__label case-block__label--solution">
-          {{ $t('projects.theSolution') }}
-        </div>
-        <p class="case-block__text">{{ projectSolution }}</p>
-      </div>
-      <div v-if="projectDecisions.length" class="case-block">
-        <div class="case-block__label case-block__label--decisions">
-          {{ $t('projects.keyDecisions') }}
-        </div>
-        <ul class="case-block__list">
-          <li v-for="(decision, i) in projectDecisions" :key="i">{{ decision }}</li>
-        </ul>
-      </div>
-    </div>
+    </template>
 
-    <div class="project-card__tech">
-      <span
-        v-for="tech in project.tech"
-        :key="tech.name"
-        class="tech-chip"
-        :aria-label="tech.name"
-      >
-        <span class="tech-chip__dot" aria-hidden="true"></span>
-        {{ tech.name }}
-      </span>
-    </div>
+    <div v-if="project.comingSoon" class="project-card__badge">Coming Soon</div>
+    <div v-else-if="project.status === 'in-progress'" class="project-card__badge project-card__badge--wip">In Progress</div>
 
     <div class="project-card__arrow" aria-hidden="true">
       <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
@@ -69,7 +63,7 @@
         <path d="M19 6H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </div>
-  </article>
+  </div>
 </template>
 
 <script setup>
@@ -81,24 +75,23 @@ const props = defineProps({
   project: { type: Object, required: true },
 })
 
+defineEmits(['select'])
+
 const { t } = useI18n()
 
-const projectName = computed(() =>
-  props.project.i18nKey ? t(`${props.project.i18nKey}.name`) : props.project.name || '',
-)
-const projectDescription = computed(() =>
-  props.project.i18nKey ? t(`${props.project.i18nKey}.description`) : props.project.description || '',
-)
-const projectProblem = computed(() =>
-  props.project.i18nKey ? t(`${props.project.i18nKey}.problem`) : '',
-)
-const projectSolution = computed(() =>
-  props.project.i18nKey ? t(`${props.project.i18nKey}.solution`) : '',
-)
-const projectDecisions = computed(() => {
-  if (!props.project.i18nKey) return []
-  const decisions = t(`${props.project.i18nKey}.decisions`)
-  return Array.isArray(decisions) ? decisions : []
+const cardTitle = computed(() => {
+  if (props.project.comingSoon) return t('projects.comingSoon.name')
+  return props.project.i18nKey ? t(`${props.project.i18nKey}.name`) : props.project.name || ''
+})
+
+const cardDescription = computed(() => {
+  if (props.project.comingSoon) return t('projects.comingSoon.description')
+  return props.project.i18nKey ? t(`${props.project.i18nKey}.description`) : props.project.description || ''
+})
+
+const cardLabel = computed(() => {
+  if (props.project.comingSoon) return `Coming Soon — ${cardDescription.value}`
+  return cardTitle.value
 })
 </script>
 
@@ -106,19 +99,56 @@ const projectDecisions = computed(() => {
 .project-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 28px;
+  gap: 12px;
+  padding: 24px;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
   transition: transform var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
 
   &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(7, 59, 76, 0.09);
+
     .project-card__arrow {
       opacity: 1;
       transform: translateX(0);
     }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.project-card--coming {
+  border-style: dashed;
+  border-color: var(--subtle);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--muted);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .project-card__name {
+    color: var(--muted);
+  }
+
+  .project-card__desc {
+    color: var(--subtle);
+  }
+
+  .project-card__arrow {
+    opacity: 0.4;
   }
 }
 
@@ -168,57 +198,11 @@ const projectDecisions = computed(() => {
   margin: 0;
 }
 
-.project-card__case {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 6px;
-  border-top: 1px solid var(--border);
-}
-
-.case-block__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.case-block__label--problem {
-  color: var(--accent);
-}
-
-.case-block__label--solution,
-.case-block__label--decisions {
-  color: var(--muted);
-}
-
-.case-block__text {
-  font-family: 'Sora', sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0;
-}
-
-.case-block__list {
-  margin: 4px 0 0;
-  padding-left: 16px;
-
-  li {
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--muted);
-    margin-bottom: 3px;
-  }
-}
-
 .project-card__tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
+  margin-top: auto;
 }
 
 .tech-chip {
@@ -228,17 +212,15 @@ const projectDecisions = computed(() => {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: var(--muted);
-  padding: 5px 12px;
+  padding: 4px 10px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 9999px;
-  transition: border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+}
 
-  &:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+.tech-chip--more {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .tech-chip__dot {
@@ -249,10 +231,28 @@ const projectDecisions = computed(() => {
   flex-shrink: 0;
 }
 
+.project-card__badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--subtle);
+  border: 1px solid var(--subtle);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+.project-card__badge--wip {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 .project-card__arrow {
   position: absolute;
   right: 24px;
-  bottom: 28px;
+  bottom: 24px;
   opacity: 0;
   transform: translateX(-8px);
   color: var(--accent);

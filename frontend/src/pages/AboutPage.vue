@@ -2,7 +2,7 @@
   <q-page class="page-about q-pa-md q-pa-lg-lg">
     <div class="page-about__inner">
       <section class="about-header reveal">
-        <SectionHeader :eyebrow="$t('about.eyebrow')" :title="$t('about.title')" :rule="false" />
+        <h1 class="about-header__h1">{{ $t('about.title') }}</h1>
         <div class="about-header__body">
           <div class="about-header__subtitle">{{ $t('about.subtitle') }}</div>
           <p class="about-header__bio">{{ $t('about.bio') }}</p>
@@ -24,7 +24,7 @@
         </div>
       </section>
 
-      <TechStackSection />
+      <ApproachSection class="reveal" />
 
       <section class="reveal">
         <SectionHeader :eyebrow="$t('about.connectEyebrow')" :title="$t('about.connectTitle')" />
@@ -58,25 +58,29 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useMeta } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import SectionHeader from 'components/SectionHeader.vue'
-import TechStackSection from 'components/TechStackSection.vue'
+import ApproachSection from 'components/ApproachSection.vue'
 import { useScrollAnimation } from 'src/composables/useScrollAnimation'
 
 const { t } = useI18n()
 
+const pageTitle = computed(() => t('about.metaTitle'))
+const pageDescription = computed(() => t('about.metaDescription'))
+
 useMeta({
-  title: () => t('about.metaTitle'),
+  title: pageTitle,
   meta: {
     description: {
       name: 'description',
-      content: t('about.bio'),
+      content: pageDescription,
     },
   },
 })
 
-const skillKeys = ['resilient', 'economical', 'maintainable', 'learner']
+const skillKeys = ['robust', 'economical', 'maintainable', 'learner']
 
 useScrollAnimation()
 </script>
@@ -89,6 +93,19 @@ useScrollAnimation()
 
 section {
   margin-top: 64px;
+}
+
+.about-header__h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 4px;
+  text-wrap: balance;
+
+  @media (min-width: 768px) {
+    font-size: 34px;
+  }
 }
 
 .about-header__body {

@@ -13,9 +13,9 @@
   --surface: #faf8f4;
   --elevated: #ffffff;
   --text: #073b4c;
-  --muted: #5a7a8a;
-  --subtle: #c4c0b8;
-  --border: #d8d4cc;
+  --muted: #4a6a7a;
+  --subtle: #8a7e72;
+  --border: #8a7e72;
   --accent: #ef476f;
 
   --success: #21ba45;
@@ -234,6 +234,18 @@ body::after {
 // ============================================
 // Accessibility
 // ============================================
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .skip-link {
   position: absolute;
   top: -100%;
@@ -363,8 +375,8 @@ button:focus-visible {
   --elevated: #0a3644;
   --text: #f2efe9;
   --muted: #8fa7a8;
-  --subtle: #1a4452;
-  --border: #1a4452;
+  --subtle: #3a6a7e;
+  --border: #3a6a7e;
   --accent: #ef476f;
 
   --header-bg: rgba(3, 31, 40, 0.92);
