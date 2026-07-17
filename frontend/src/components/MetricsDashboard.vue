@@ -11,11 +11,11 @@
         dense
         color="accent"
         icon="bolt"
-        :label="$q.screen.lt.sm ? '' : $t('dashboard.stressTest')"
         @click="simulateStress"
         :loading="isStressing"
         class="border-glow-accent text-mono text-caption"
       >
+        <span class="stress-label">{{ $t('dashboard.stressTest') }}</span>
         <q-tooltip>{{ $t('dashboard.stressTest') }}</q-tooltip>
       </q-btn>
     </div>
@@ -135,14 +135,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import { api } from 'boot/axios'
 import { useI18n } from 'vue-i18n'
 
-import { useQuasar } from 'quasar'
+import { useQuasar, useInterval, useTimeout } from 'quasar'
 
 const { t } = useI18n()
 const $q = useQuasar()
+const { registerInterval } = useInterval()
+const { registerTimeout } = useTimeout()
 
 const metrics = ref([])
 const status = ref('CLOSED')
@@ -156,12 +158,12 @@ const lastBlockedCount = ref(0)
 
 const trafficSeries = computed(() => [
   {
-    name: 'Success',
-    data: metrics.value.map((m) => [m.timestamp, m.successRps || 0]),
+    name: 'Served',
+    data: metrics.value.map((m) => [m.timestamp, m.totalSuccess || 0]),
   },
   {
     name: 'Blocked',
-    data: metrics.value.map((m) => [m.timestamp, m.blockedRps || 0]),
+    data: metrics.value.map((m) => [m.timestamp, m.totalBlocked || 0]),
   },
 ])
 
@@ -193,7 +195,7 @@ const trafficChartOptions = computed(() => {
     yaxis: {
       labels: {
         style: { colors: textColor, fontSize: '10px' },
-        formatter: (val) => `${val.toFixed(1)} req/s`,
+        formatter: (val) => `${Math.round(val)}`,
       },
     },
     grid: { borderColor: gridColor, strokeDashArray: 4 },
@@ -204,15 +206,13 @@ const trafficChartOptions = computed(() => {
       shared: true,
       y: {
         formatter: (val, { seriesIndex }) => {
-          const label = seriesIndex === 0 ? 'OK' : 'BLOCKED'
-          return `${val.toFixed(2)} req/s (${label})`
+          const label = seriesIndex === 0 ? 'Served' : 'Blocked'
+          return `${Math.round(val)} requests (${label})`
         },
       },
     },
   }
 })
-
-let intervalId = null
 
 async function fetchMetrics() {
   try {
@@ -336,7 +336,7 @@ async function simulateStress() {
   )
 
   await Promise.all(requests)
-  setTimeout(() => {
+  registerTimeout(() => {
     isStressing.value = false
     addLog('STRESS_TEST completed', 'info')
     fetchMetrics()
@@ -345,12 +345,8 @@ async function simulateStress() {
 
 onMounted(() => {
   fetchMetrics()
-  intervalId = setInterval(fetchMetrics, 5000)
+  registerInterval(fetchMetrics, 5000)
   addLog('Observability System Online', 'info')
-})
-
-onBeforeUnmount(() => {
-  if (intervalId) clearInterval(intervalId)
 })
 </script>
 
@@ -424,5 +420,11 @@ onBeforeUnmount(() => {
   0% { opacity: 1; }
   50% { opacity: 0.5; }
   100% { opacity: 1; }
+}
+
+.stress-label {
+  @media (max-width: 599px) {
+    display: none;
+  }
 }
 </style>

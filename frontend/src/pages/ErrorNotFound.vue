@@ -16,4 +16,9 @@
 </template>
 
 <script setup>
+import { useMeta } from 'quasar'
+
+useMeta({
+  title: '404 — Page Not Found',
+})
 </script>

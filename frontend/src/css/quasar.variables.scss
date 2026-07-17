@@ -19,11 +19,23 @@ $glow-accent : rgba(239, 71, 111, 0.2);
 :root {
   --glow-primary: #{$glow-primary};
   --glow-accent: #{$glow-accent};
+  --stack-prompt: #073b4c;
+  --stack-label-bg: rgba(7, 59, 76, 0.06);
+  --stack-label-text: rgba(7, 59, 76, 0.55);
+  --stack-value: #073b4c;
+  --stack-border: rgba(7, 59, 76, 0.08);
+  --stack-accent-bar: #ef476f;
 }
 
 .body--dark {
   --glow-primary: rgba(242, 239, 233, 0.1);
   --glow-accent: rgba(239, 71, 111, 0.4);
+  --stack-prompt: #31ccec;
+  --stack-label-bg: rgba(242, 239, 233, 0.08);
+  --stack-label-text: rgba(242, 239, 233, 0.55);
+  --stack-value: #f2efe9;
+  --stack-border: rgba(242, 239, 233, 0.08);
+  --stack-accent-bar: #ef476f;
 }
 
 // Dark mode variants

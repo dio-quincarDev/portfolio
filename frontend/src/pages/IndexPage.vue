@@ -4,59 +4,13 @@
     <div class="row q-col-gutter-md q-col-gutter-lg-md">
       <!-- HERO & TERMINAL SECTION (8 Cols) -->
       <div class="col-12 col-lg-8">
-        <div class="terminal-container tech-card q-pa-sm q-pa-md-md border-glow-primary full-height">
-          <div class="row items-center q-mb-sm border-bottom q-pb-xs">
-            <div class="terminal-dots q-mr-md">
-              <span class="dot primary-dot"></span>
-              <span class="dot primary-dot"></span>
-              <span class="dot accent-dot"></span>
-            </div>
-            <div class="text-caption text-mono text-grey-7">{{ $t('hero.console') }}</div>
-          </div>
-
-          <div class="terminal-content text-mono q-mt-sm q-mt-md-md">
-            <div class="text-secondary text-h4 text-h3-sm text-h2-md q-mb-xs text-weight-bold">
-              {{ $t('hero.name') }}
-            </div>
-            <div
-              class="text-subtitle1 text-h6-sm text-grey-9 q-mb-md q-mb-lg-md text-weight-medium text-uppercase"
-              style="letter-spacing: 2px"
-            >
-              {{ $t('hero.seniority') }}
-            </div>
-
-            <div class="typed-text">
-              <p class="q-ma-none text-grey-8 text-caption text-body2-md">{{ $t('hero.systemStatus') }}</p>
-              <p class="q-ma-none text-primary text-weight-bold text-caption text-body2-md">{{ $t('hero.activeDev') }}</p>
-              <p class="q-ma-none text-secondary text-weight-bold text-caption text-body2-md">{{ $t('hero.stack') }}</p>
-              <p class="q-ma-none text-grey-9 text-caption text-body2-md">{{ $t('hero.philosophy') }}</p>
-              <p class="q-ma-none text-grey-8 text-italic q-mt-xs text-caption text-body2-md" style="opacity: 0.8">
-                {{ $t('hero.uiInterface') }}
-              </p>
-            </div>
-          </div>
-
-          <div class="q-mt-lg q-mt-xl-md row q-gutter-sm full-width">
-            <q-btn
-              flat
-              color="secondary"
-              :label="$t('hero.coreProjects')"
-              icon="account_tree"
-              @click="scrollToProjects"
-              class="cyber-button"
-              :class="{ 'full-width': $q.screen.lt.sm }"
-            />
-            <q-btn
-              flat
-              color="accent"
-              :label="$t('hero.contactProtocol')"
-              icon="terminal"
-              @click="scrollToContact"
-              class="cyber-button accent-border"
-              :class="{ 'full-width': $q.screen.lt.sm }"
-            />
-          </div>
-        </div>
+        <HeroSection
+          :current-uptime="currentUptime"
+          :response-time="responseTime"
+          @scroll-to-philosophy="scrollToPhilosophy"
+          @scroll-to-projects="scrollToProjects"
+          @scroll-to-contact="scrollToContact"
+        />
       </div>
 
       <!-- SYSTEM STATUS TILE (4 Cols) -->
@@ -72,7 +26,7 @@
                   </q-tooltip>
                 </q-icon>
               </div>
-              <q-badge :color="healthStatus === 'UP' ? 'positive' : 'negative'" class="q-px-sm">
+              <q-badge :color="healthStatus === 'UP' ? 'positive' : 'negative'" class="q-px-sm" :class="{ 'status-glow': healthStatus === 'UP' }">
                 {{ healthStatus === 'UP' ? $t('health.operational') : $t('health.offline') }}
               </q-badge>
             </div>
@@ -112,26 +66,26 @@
         </div>
       </div>
 
-      <!-- PROJECTS GRID (right after hero) -->
-      <div id="projects-section" class="col-12">
-        <div class="row items-center q-mb-sm q-mb-md-md">
-          <q-icon name="layers" color="secondary" size="sm" class="q-mr-sm" />
-          <div class="text-subtitle1 text-h6-sm text-mono">{{ $t('projects.title') }}</div>
-        </div>
-        <div class="row q-col-gutter-md q-col-gutter-lg-md">
-          <div v-for="project in projects" :key="project.id" class="col-12">
-            <ProjectCard :project="project" />
-          </div>
-        </div>
-      </div>
+      <!-- ENGINEERING PHILOSOPHY -->
+      <PhilosophySection />
 
-      <!-- OBSERVABILITY DASHBOARD (after projects) -->
+      <!-- PROJECTS GRID -->
+      <ProjectsSection :projects="projects" />
+
+      <!-- OBSERVABILITY DASHBOARD (collapsible) -->
       <div class="col-12">
-        <MetricsDashboard />
+        <q-expansion-item
+          :label="$t('dashboard.title')"
+          header-class="text-mono text-secondary expansion-header tech-card q-pa-sm q-pa-md-sm"
+          expand-icon-class="text-secondary"
+          dense
+        >
+          <MetricsDashboard />
+        </q-expansion-item>
       </div>
 
       <!-- CONTACT SECTION -->
-      <div id="contacto-section" class="col-12 q-mt-lg q-mt-xl-md">
+      <div id="contacto-section" class="col-12 q-mt-lg q-mt-xl-md animate-on-scroll">
         <div class="text-center q-mb-md">
           <q-btn
             unelevated
@@ -222,36 +176,28 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import { api } from 'boot/axios'
-import ProjectCard from 'components/ProjectCard.vue'
+import { ref } from 'vue'
+import { useMeta } from 'quasar'
+import HeroSection from 'components/HeroSection.vue'
+import PhilosophySection from 'components/PhilosophySection.vue'
+import ProjectsSection from 'components/ProjectsSection.vue'
 import MetricsDashboard from 'components/MetricsDashboard.vue'
-import { useQuasar } from 'quasar'
-import { useI18n } from 'vue-i18n'
-import emailjs from '@emailjs/browser'
+import { useHealthCheck } from 'src/composables/useHealthCheck'
+import { useContactForm } from 'src/composables/useContactForm'
+import { useScrollAnimation } from 'src/composables/useScrollAnimation'
 
-const $q = useQuasar()
-const { t } = useI18n()
-
-const form = reactive({
-  name: '',
-  email: '',
-  message: '',
-  honeypot: '',
+useMeta({
+  title: 'Diógenes Quintero — Backend Java Developer & API Architect',
+  meta: {
+    description: {
+      name: 'description',
+      content: 'Backend Java Developer & API Architect. Designing enterprise-grade systems on free-tier infrastructure with Java 21, Spring Boot, and Docker.',
+    },
+  },
 })
 
-const sending = ref(false)
-const contactExpanded = ref(false)
-const cooldownUntil = ref(0)
-
-emailjs.init({
-  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-})
-
-const healthStatus = ref('DOWN')
-const currentUptime = ref('--')
-const responseTime = ref(0)
-const startTime = ref(0)
+const { healthStatus, currentUptime, responseTime } = useHealthCheck()
+const { form, sending, contactExpanded, toggleContact, scrollToContact, sendContact } = useContactForm()
 
 const projects = ref([
   {
@@ -273,170 +219,42 @@ const projects = ref([
   },
 ])
 
-const checkHealth = async () => {
-  const fetchStart = performance.now()
-  try {
-    const [healthRes, uptimeRes] = await Promise.all([
-      api.get('/actuator/health'),
-      api.get('/actuator/metrics/process.uptime').catch(() => null),
-    ])
-    healthStatus.value = healthRes.data.status
-    responseTime.value = Math.round(performance.now() - fetchStart)
-    if (uptimeRes?.data?.measurements?.[0]?.value) {
-      const uptimeSeconds = uptimeRes.data.measurements[0].value
-      startTime.value = Date.now() - uptimeSeconds * 1000
-    } else if (!startTime.value) {
-      startTime.value = Date.now()
-    }
-    updateUptime()
-  } catch {
-    healthStatus.value = 'DOWN'
-  }
-}
-
-const updateUptime = () => {
-  if (!startTime.value) return
-  const diff = Date.now() - startTime.value
-  const days = Math.floor(diff / 86400000)
-  const hours = Math.floor((diff % 86400000) / 3600000)
-  const mins = Math.floor((diff % 3600000) / 60000)
-  if (days > 0) {
-    currentUptime.value = `${days}d ${hours}h`
-  } else if (hours > 0) {
-    currentUptime.value = `${hours}h ${mins}m`
-  } else {
-    currentUptime.value = `${mins}m`
-  }
-}
-
-const scrollToContact = () => {
-  const el = document.getElementById('contacto-section')
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' })
-    setTimeout(() => {
-      contactExpanded.value = true
-    }, 500)
-  }
-}
-
 const scrollToProjects = () => {
   const el = document.getElementById('projects-section')
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
-const toggleContact = () => {
-  contactExpanded.value = !contactExpanded.value
+const scrollToPhilosophy = () => {
+  const el = document.getElementById('philosophy-section')
+  if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
-onMounted(() => {
-  updateUptime()
-  checkHealth()
-  setInterval(checkHealth, 30000)
-  setInterval(updateUptime, 60000)
-})
-
-const sendContact = async () => {
-  if (form.honeypot) {
-    console.warn('Bot detected via honeypot')
-    return
-  }
-
-  if (Date.now() < cooldownUntil.value) {
-    $q.notify({
-      message: t('contact.cooldown'),
-      color: 'warning',
-      icon: 'timer',
-    })
-    return
-  }
-
-  if (!form.name || !form.email || !form.message) {
-    $q.notify({
-      message: t('contact.required'),
-      color: 'negative',
-      icon: 'warning',
-    })
-    return
-  }
-
-  sending.value = true
-
-  try {
-    await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      {
-        name: form.name,
-        from_email: form.email,
-        message: form.message,
-      },
-    )
-
-    $q.notify({
-      message: t('contact.sent'),
-      color: 'positive',
-      icon: 'done',
-    })
-
-    form.name = ''
-    form.email = ''
-    form.message = ''
-
-    cooldownUntil.value = Date.now() + 60000
-  } catch (error) {
-    $q.notify({
-      message: t('contact.error'),
-      color: 'negative',
-      icon: 'error',
-    })
-    console.error('EmailJS error:', error)
-  } finally {
-    sending.value = false
-  }
-}
+useScrollAnimation()
 </script>
 
 <style lang="scss" scoped>
-.terminal-container {
-  min-height: 280px;
-  @media (min-width: 600px) {
-    min-height: 350px;
-  }
-}
-.border-bottom {
-  border-bottom: 1px solid rgba(7, 59, 76, 0.1);
-}
-.terminal-dots {
-  display: flex;
-  gap: 6px;
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    &.primary-dot {
-      background: $primary;
-    }
-    &.accent-dot {
-      background: $accent;
-    }
-  }
-  .text-secondary {
-    color: $secondary;
-  }
-}
-.terminal-content {
-  line-height: 1.7;
-  font-size: 0.95rem;
-  @media (min-width: 600px) {
-    line-height: 1.8;
-    font-size: 1.1rem;
-  }
-}
 .ecosystem-card {
   min-height: 120px;
   @media (min-width: 600px) {
     min-height: 150px;
   }
+}
+
+.expansion-header {
+  border-left: 4px solid $accent;
+  cursor: pointer;
+  &:hover {
+    background: rgba(239, 71, 111, 0.03);
+  }
+}
+
+.status-glow {
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(33, 186, 69, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(33, 186, 69, 0.7); }
 }
 
 .slide-expand-enter-active,

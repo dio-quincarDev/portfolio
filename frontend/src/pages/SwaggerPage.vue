@@ -1,12 +1,8 @@
 <template>
-  <q-page :class="$q.screen.lt.md ? 'q-pa-sm' : 'q-pa-lg'">
-    <div class="tech-card border-glow-primary" :class="$q.screen.lt.md ? 'q-pa-md' : 'q-pa-lg'">
+  <q-page class="q-pa-sm q-pa-lg-md">
+    <div class="tech-card border-glow-primary q-pa-md q-pa-lg-lg">
       <div class="row items-center q-mb-md border-bottom q-pb-md">
-        <div class="terminal-dots q-mr-md gt-xs">
-          <span class="dot primary-dot"></span>
-          <span class="dot primary-dot"></span>
-          <span class="dot accent-dot"></span>
-        </div>
+        <TerminalDots size="md" class="q-mr-md gt-xs" />
         <div class="text-h6 text-mono text-secondary">{{ $t('swagger.title') }}</div>
       </div>
       <iframe :src="swaggerUrl" class="swagger-iframe-full"></iframe>
@@ -16,10 +12,25 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useMeta } from 'quasar'
+import { useI18n } from 'vue-i18n'
+import TerminalDots from 'components/TerminalDots.vue'
+
+const { t } = useI18n()
 
 const swaggerUrl = computed(() => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
   return `${baseUrl}/swagger-ui.html`
+})
+
+useMeta({
+  title: () => t('swagger.metaTitle'),
+  meta: {
+    description: {
+      name: 'description',
+      content: 'Interactive Swagger UI documentation for the Feature Flag API. Explore all endpoints live.',
+    },
+  },
 })
 </script>
 
@@ -35,22 +46,6 @@ const swaggerUrl = computed(() => {
 
   @media (max-width: 599px) {
     height: calc(100vh - 180px);
-  }
-}
-
-.terminal-dots {
-  display: flex;
-  gap: 6px;
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    &.primary-dot {
-      background: $primary;
-    }
-    &.accent-dot {
-      background: $accent;
-    }
   }
 }
 </style>

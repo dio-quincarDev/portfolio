@@ -32,7 +32,7 @@ h1, h2, h3, .text-h1, .text-h2, .text-h3, .text-h6 {
 }
 
 .tech-card {
-  background: white;
+  background: #eae7e1;
   border: 2px solid $secondary;
   border-radius: 0;
   position: relative;
@@ -73,8 +73,49 @@ h1, h2, h3, .text-h1, .text-h2, .text-h3, .text-h6 {
   background: $accent;
 }
 
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: $accent;
+  color: white;
+  padding: 8px 16px;
+  z-index: 9999;
+  font-family: 'JetBrains Mono', monospace;
+  text-decoration: none;
+  font-size: 14px;
+
+  &:focus {
+    top: 0;
+  }
+}
+
 #q-app {
   min-height: 100vh;
+}
+
+// Focus indicators for accessibility
+.cyber-button:focus-visible,
+.q-btn:focus-visible,
+.q-item:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+// Ensure focused elements clear sticky header
+:target,
+[id] {
+  scroll-margin-top: 60px;
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .cyber-button {
@@ -131,7 +172,7 @@ h1, h2, h3, .text-h1, .text-h2, .text-h3, .text-h6 {
   }
 
   .tech-card {
-    background: var(--card-bg);
+    background: #0f5c72;
     border-color: $dark-text-muted;
 
     &::before {
