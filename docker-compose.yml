@@ -1,140 +1,15 @@
 services:
-  # ==================== FRONTEND (Quasar) ====================
+  # ==================== FRONTEND (Quasar SPA) ====================
   frontend:
     image: ${DOCKER_USERNAME:-portfolio}/portfolio-frontend:${TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: portfolio-frontend
-    restart: unless-stopped
+    restart: on-failure
     networks:
-      - portfolio-internal-network
-      - proxy-caddy-network
-    depends_on:
-      gateway:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 256M
+      - proxy-network
 
-  # ==================== API GATEWAY (Traffic Police) ====================
-  gateway:
-    image: ${DOCKER_USERNAME:-portfolio}/portfolio-gateway:${TAG:-latest}
-    build:
-      context: ./backend/portfolio-gateway
-      dockerfile: Dockerfile
-    container_name: portfolio-gateway
-    restart: unless-stopped
-    networks:
-      - portfolio-internal-network
-      - proxy-caddy-network
-    # El puerto 8080 ya no se expone al host; Caddy lo accede internamente.
-    environment:
-      - REDIS_HOST=portfolio-redis
-      - APP_SERVICES_FEATURE_FLAG_API_URL=http://portfolio-backend:8081
-      - CORS_ALLOWED_ORIGINS=https://dioquincar.dev
-      - SERVER_PORT=8080
-    depends_on:
-      backend:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 512M
-
-  # ==================== FEATURE FLAG API (Backend) ====================
-  backend:
-    image: ${DOCKER_USERNAME:-portfolio}/portfolio-backend:${TAG:-latest}
-    build:
-      context: ./backend/feat-flag-api-bytes-colabs
-      dockerfile: Dockerfile
-    container_name: portfolio-backend
-    restart: unless-stopped
-    networks:
-      - portfolio-internal-network
-    volumes:
-      - portfolio-sqlite-data:/app/data
-    environment:
-      - SERVER_PORT=8081
-      - JWT_SECRET=${JWT_SECRET}
-      - GATEWAY_URL=${PUBLIC_GATEWAY_URL:-http://localhost:8080}
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 20s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 512M
-
-  # ==================== CACHE (Redis) ====================
-  redis:
-    image: redis:7-alpine
-    container_name: portfolio-redis
-    restart: unless-stopped
-    command: redis-server --appendonly yes --save 60 1000 --save 300 10
-    networks:
-      - portfolio-internal-network
-    volumes:
-      - portfolio-redis-data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 256M
-
-# ==================== VOLUMES ====================
-volumes:
-  portfolio-redis-data:
-  portfolio-sqlite-data:
-
-# ==================== NETWORKS ====================
 networks:
-  portfolio-internal-network:
-    driver: bridge
-  proxy-caddy-network:
+  proxy-network:
     external: true

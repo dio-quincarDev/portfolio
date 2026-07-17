@@ -1,155 +1,92 @@
 <template>
-  <div class="terminal-container tech-card q-pa-sm q-pa-md-md border-glow-primary full-height">
-    <div class="row items-center q-mb-sm border-bottom q-pb-xs">
-      <TerminalDots size="md" class="q-mr-md" />
-      <div class="text-caption text-mono text-grey-7">{{ $t('hero.console') }}</div>
+  <section class="hero" aria-labelledby="hero-name">
+    <p class="hero__eyebrow">{{ $t('hero.title') }}</p>
+    <h1 id="hero-name" class="hero__name display">{{ $t('hero.name') }}</h1>
+    <p class="hero__tagline">{{ $t('hero.tagline') }}</p>
+    <p class="hero__capabilities">{{ $t('hero.capabilities') }}</p>
+
+    <div class="hero__actions">
+      <button class="btn btn--primary" type="button" @click="goProjects">
+        {{ $t('hero.cta.projects') }}
+      </button>
+      <button class="btn btn--outline" type="button" @click="$emit('scrollToContact')">
+        {{ $t('hero.cta.contact') }}
+      </button>
     </div>
-
-    <div class="terminal-content text-mono q-mt-sm q-mt-md-md">
-      <h1 class="text-secondary text-h4 text-h3-sm text-h2-md q-mb-xs text-weight-bold" style="margin: 0; line-height: 1.2;">
-        {{ $t('hero.name') }}
-      </h1>
-      <div
-        class="text-subtitle1 text-h6-sm text-accent q-mb-md q-mb-lg-md text-weight-medium text-uppercase"
-        style="letter-spacing: 2px"
-      >
-        {{ $t('hero.seniority') }}
-      </div>
-
-      <p class="tagline text-grey-8 text-body1 text-body2-md text-h6-md q-mb-lg q-mb-xl-md" style="max-width: 580px; line-height: 1.6; min-height: 3em;">
-        {{ displayedTagline }}<span v-if="!taglineComplete" class="typing-cursor">|</span>
-      </p>
-
-      <div class="row q-col-gutter-md q-mb-lg">
-        <div class="col-6">
-          <div class="stat-value text-secondary text-h5 text-h4-md">{{ currentUptime }}</div>
-          <div class="stat-label text-grey-7 text-caption">{{ $t('health.uptime') }}</div>
-        </div>
-        <div class="col-6">
-          <div class="stat-value text-secondary text-h5 text-h4-md">{{ responseTime }}ms</div>
-          <div class="stat-label text-grey-7 text-caption">{{ $t('health.responseTime') }}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row q-gutter-sm full-width">
-      <q-btn
-        flat
-        color="secondary"
-        :label="$t('hero.howIWork')"
-        icon="psychology"
-        @click="$emit('scrollToPhilosophy')"
-        class="cyber-button btn-responsive"
-      />
-      <q-btn
-        flat
-        color="secondary"
-        :label="$t('hero.coreProjects')"
-        icon="account_tree"
-        @click="$emit('scrollToProjects')"
-        class="cyber-button btn-responsive"
-      />
-      <q-btn
-        flat
-        color="accent"
-        :label="$t('hero.contactProtocol')"
-        icon="terminal"
-        @click="$emit('scrollToContact')"
-        class="cyber-button accent-border btn-responsive"
-      />
-    </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import TerminalDots from 'components/TerminalDots.vue'
+import { useRouter } from 'vue-router'
 
-defineProps({
-  currentUptime: { type: String, default: '--' },
-  responseTime: { type: Number, default: 0 },
-})
+const router = useRouter()
 
-defineEmits(['scrollToPhilosophy', 'scrollToProjects', 'scrollToContact'])
+defineEmits(['scrollToContact'])
 
-const { t } = useI18n()
-
-const taglineText = computed(() => t('hero.tagline'))
-const displayedTagline = ref('')
-const taglineComplete = ref(false)
-
-async function typeTagline() {
-  displayedTagline.value = ''
-  taglineComplete.value = false
-  for (let i = 0; i <= taglineText.value.length; i++) {
-    displayedTagline.value = taglineText.value.slice(0, i)
-    await new Promise((r) => setTimeout(r, 18))
-  }
-  taglineComplete.value = true
-}
-
-watch(taglineText, () => {
-  typeTagline()
-})
-
-onMounted(() => {
-  typeTagline()
-})
+const goProjects = () => router.push('/projects')
 </script>
 
-<style lang="scss" scoped>
-.terminal-container {
-  min-height: 320px;
-  @media (min-width: 600px) {
-    min-height: 380px;
+<style scoped>
+.hero {
+  padding: 48px 0 32px;
+  position: relative;
+
+  @media (min-width: 1024px) {
+    padding: 80px 0 48px;
   }
 }
-.border-bottom {
-  border-bottom: 1px solid rgba(7, 59, 76, 0.1);
+
+.hero__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 12px;
 }
-.terminal-content {
+
+.hero__name {
+  font-size: 36px;
+  line-height: 1.1;
+  margin: 0 0 8px;
+  color: var(--text);
+
+  @media (min-width: 768px) {
+    font-size: 48px;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 56px;
+  }
+}
+
+.hero__tagline {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
   line-height: 1.7;
-  font-size: 0.95rem;
-  @media (min-width: 600px) {
-    line-height: 1.8;
-    font-size: 1.1rem;
-  }
+  color: var(--muted);
+  max-width: 540px;
+  margin: 20px 0 8px;
 }
-.tagline {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.3px;
-}
-.typing-cursor {
-  display: inline-block;
-  color: $accent;
-  font-weight: 700;
-  animation: blink 0.8s step-end infinite;
-}
-@keyframes blink {
-  50% { opacity: 0; }
-}
-.stat-value {
+
+.hero__capabilities {
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.stat-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  margin: 0 0 32px;
   letter-spacing: 0.5px;
-  margin-top: 2px;
 }
 
-.btn-responsive {
-  @media (max-width: 599px) {
-    width: 100%;
-  }
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-:global(.body--dark) {
-  .border-bottom {
-    border-bottom-color: rgba(242, 239, 233, 0.1);
+@media (max-width: 599px) {
+  .hero__actions .btn {
+    flex: 1 1 100%;
   }
 }
 </style>

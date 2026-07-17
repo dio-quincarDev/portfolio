@@ -19,26 +19,10 @@ export function useContactForm() {
   })
 
   const sending = ref(false)
-  const contactExpanded = ref(false)
   const cooldownUntil = ref(0)
-
-  const toggleContact = () => {
-    contactExpanded.value = !contactExpanded.value
-  }
-
-  const scrollToContact = () => {
-    const el = document.getElementById('contacto-section')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-      setTimeout(() => {
-        contactExpanded.value = true
-      }, 500)
-    }
-  }
 
   const sendContact = async () => {
     if (form.honeypot) {
-      console.warn('Bot detected via honeypot')
       return
     }
 
@@ -84,13 +68,14 @@ export function useContactForm() {
       form.message = ''
 
       cooldownUntil.value = Date.now() + 60000
-    } catch (error) {
+      return true
+    } catch {
       $q.notify({
         message: t('contact.error'),
         color: 'negative',
         icon: 'error',
       })
-      console.error('EmailJS error:', error)
+      return false
     } finally {
       sending.value = false
     }
@@ -99,9 +84,6 @@ export function useContactForm() {
   return {
     form,
     sending,
-    contactExpanded,
-    toggleContact,
-    scrollToContact,
     sendContact,
   }
 }
