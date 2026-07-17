@@ -8,8 +8,8 @@ services:
     container_name: portfolio-frontend
     restart: on-failure
     networks:
-      - proxy-network
+      - proxy-caddy-network
 
 networks:
-  proxy-network:
+  proxy-caddy-network:
     external: true
