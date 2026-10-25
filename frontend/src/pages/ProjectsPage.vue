@@ -38,7 +38,7 @@
               round
               dense
               icon="close"
-              aria-label="Close"
+              :aria-label="$t('contact.close')"
               @click="dialogOpen = false"
             />
             <ProjectDetail :project="selectedProject" />
@@ -52,21 +52,24 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useMeta } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import { useProjects } from 'src/composables/useProjects'
 import SectionHeader from 'components/SectionHeader.vue'
 import ProjectCard from 'components/ProjectCard.vue'
 import ProjectDetail from 'components/ProjectDetail.vue'
 import { useScrollAnimation } from 'src/composables/useScrollAnimation'
 
-useMeta({
-  title: 'Projects — Diogenes Quintero',
+const { t } = useI18n()
+
+useMeta(() => ({
+  title: t('projects.metaTitle'),
   meta: {
     description: {
       name: 'description',
-      content: 'Backend Java projects built with Spring Boot, Docker, PostgreSQL, and clean architecture.',
+      content: t('projects.metaDescription'),
     },
   },
-})
+}))
 
 const { getProjectById, getProjectsByCategory } = useProjects()
 

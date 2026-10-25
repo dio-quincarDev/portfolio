@@ -6,257 +6,220 @@ export default {
     switchLang: 'Cambiar idioma',
     toggleDark: 'Cambiar modo oscuro',
     toggleMenu: 'Abrir/cerrar menú de navegación',
+    skipToContent: 'Ir al contenido principal',
+    mainNavigation: 'Navegación principal',
+    socialLinks: 'Enlaces sociales',
+    menu: 'Menú de navegación',
   },
   approach: {
     eyebrow: 'ENFOQUE',
     title: 'Cómo trabajo',
     items: {
       optimize: {
-        title: 'Optimizo antes de escalar',
-        text: 'Optimizo el uso de recursos antes de agregar capacidad. JVM tuning, código limpio y arquitectura cuidadosa, no más hardware.',
+        title: 'Mido antes de optimizar',
+        text: 'Prefiero medir el consumo y la latencia antes de cambiar la arquitectura. Optimizo donde hay evidencia, no por intuición.',
       },
       stability: {
-        title: 'Diseño para la Estabilidad',
-        text: 'Health checks, degradación gradual y aislamiento de fallos desde el inicio. Sistemas que se autoprotegen y se mantienen predecibles bajo carga.',
+        title: 'Diseño para fallar de forma controlada',
+        text: 'Validación en los límites del sistema, manejo explícito de errores y pruebas de integración contra dependencias reales.',
       },
       compatibility: {
-        title: 'Construyo para compatibilidad',
-        text: 'Contenedores multi-arquitectura y configuraciones portables. Sin vendor lock-in, sin sorpresas al cambiar de entorno.',
+        title: 'Mantengo la portabilidad',
+        text: 'Contenedores, configuración por entorno y despliegues reproducibles. Menos dependencia de una máquina concreta.',
       },
       documentation: {
-        title: 'Documento decisiones',
-        text: 'Cada decisión de arquitectura tiene un porqué. Documento trade-offs y alternativas para que el equipo entienda no solo el qué, sino el porqué.',
+        title: 'Documento las decisiones',
+        text: 'Los contratos, las migraciones y las decisiones de arquitectura quedan escritos para que otra persona pueda continuar el trabajo.',
       },
     },
+  },
+  home: {
+    metaTitle: 'Diógenes Quintero — Desarrollador Backend Java',
+    metaDescription:
+      'Desarrollador backend Java. APIs y servicios con Spring Boot, autenticación OAuth2/JWT, PostgreSQL y despliegue con Docker.',
   },
   hero: {
     name: 'DIÓGENES QUINTERO',
-    title: 'BACKEND JAVA DEVELOPER',
-    capabilities: 'Backend · API · Arquitectura · Seguridad',
-    tagline: 'Construyo sistemas backend seguros y robustos que escalan.',
+    title: 'DESARROLLADOR BACKEND JAVA',
+    capabilities: 'Java · Spring Boot · PostgreSQL · Docker',
+    tagline:
+      'Desarrollo APIs y servicios con Java y Spring Boot, con foco en autenticación, seguridad y despliegue.',
     cta: {
-      projects: 'Explorar Proyectos',
-      approach: 'Cómo Trabajo',
+      projects: 'Ver proyectos',
+      cv: 'Descargar CV',
       contact: 'Contacto',
     },
   },
-  services: {
-    eyebrow: 'SERVICIOS',
-    title: 'Qué Hago',
-    items: [
-      {
-        key: 'api',
-        title: 'Diseño y Desarrollo de APIs',
-        text: 'APIs RESTful con Spring Boot, con contratos claros, manejo de errores adecuado y documentación completa.',
-      },
-      {
-        key: 'architecture',
-        title: 'Arquitectura Backend',
-        text: 'Arquitecturas modulares y hexagonales que separan responsabilidades y mantienen el dominio limpio. Resiliencia desde el día uno.',
-      },
-      {
-        key: 'production',
-        title: 'Sistemas en Producción',
-        text: 'Pipelines de CI/CD, monitoreo y observabilidad. Sistemas desplegables, mantenibles y observables en producción.',
-      },
-    ],
-  },
   projects: {
     title: 'PROYECTOS',
-    eyebrow: 'CASOS REALES',
+    eyebrow: 'TRABAJO',
+    metaTitle: 'Proyectos — Diógenes Quintero',
+    metaDescription:
+      'Proyectos de backend Java: autenticación, microservicios, PostgreSQL y despliegue con Docker.',
     viewSource: 'Ver código fuente',
     viewVideo: 'Ver video explicativo',
-    theProblem: 'EL PROBLEMA',
-    theSolution: 'LA SOLUCIÓN',
+    openProject: 'Abrir detalle del proyecto',
+    theProblem: 'CONTEXTO',
+    theSolution: 'SOLUCIÓN',
+    context: 'CONTEXTO DEL EQUIPO',
+    contribution: 'MI APORTE',
+    components: 'COMPONENTES',
     keyDecisions: 'DECISIONES CLAVE',
     empty: 'No hay proyectos aún.',
-    diagram: 'Arquitectura',
+    diagram: 'Flujo de autenticación',
     video: 'Video',
-    tryDemo: 'Probar Demo',
+    tryDemo: 'Probar demo',
     tryApi: 'Explorar API',
-    hideSwagger: 'Cerrar',
-    inProgress: 'En Proceso',
+    home: {
+      eyebrow: 'SELECCIÓN',
+      title: 'Proyectos',
+      featured: 'DESTACADO',
+      viewCase: 'Ver caso completo',
+      viewAll: 'Ver todos los proyectos',
+    },
     categories: {
-      'personal-project': { eyebrow: 'PORTAFOLIO', title: 'Proyectos' },
-      challenge: { eyebrow: 'RETOS', title: 'Retos de Código' },
-      community: { eyebrow: 'COMUNIDAD', title: 'Open Source y Comunidad' },
+      'personal-project': { eyebrow: 'TRABAJO', title: 'Proyectos' },
+      community: { eyebrow: 'EQUIPO', title: 'Colaboraciones' },
     },
-    comingSoon: {
-      name: 'Próximamente',
-      description: 'Un nuevo proyecto está en progreso. Vuelve pronto para novedades.',
-    },
-    authService: {
-      name: 'Auth Service',
+    pymesAdmin: {
+      name: 'Pymeq — Forensic Accounting',
       description:
-        'Sistema de autenticación y autorización stateless basado en JWT con Spring Security. Implementa RBAC, hashing BCrypt y 46 tests entre unit, integration y slice.',
+        'SaaS multi-tenant de contabilidad forense. Servicio de autenticación con OAuth2 y JWT, gateway que valida la identidad y aislamiento por esquemas en PostgreSQL.',
       problem:
-        'Los microservicios necesitan autenticación centralizada sin sesiones HTTP. Cada servicio debe validar tokens de forma independiente.',
+        'La aplicación necesitaba autenticación centralizada, aislamiento entre organizaciones y un punto de entrada único para los servicios internos.',
       solution:
-        'Auth stateless con JWT HMAC-SHA256, OncePerRequestFilter y RBAC vía PreAuthorize. 46 tests cubriendo seguridad, validación y casos borde.',
+        'Implementé autenticación con OAuth2 (Google), JWT y rotación de refresh tokens, validación en el gateway y multi-tenancy con esquemas auth/core. Redis cubre rate limiting, blacklist y registros pendientes.',
       decisions: [
-        'JWT sobre sesiones: stateless, sin Redis para almacenar tokens',
-        'HMAC-SHA256 sobre RSA: gestión de llaves más simple para servicios internos',
-        'BCrypt con fuerza configurable para hashing de passwords',
-        'MapStruct para mapeo DTO limpio sin overhead de reflection',
+        'Rotación de refresh tokens con detección de reuso y revocación de la familia completa.',
+        'Validación JWT en el gateway (WebFlux): los servicios internos reciben la identidad ya resuelta.',
+        '206 pruebas automatizadas: 150 unitarias y 56 de integración con Testcontainers.',
+        'CI/CD con imágenes multi-arquitectura y despliegue continuo en Oracle Cloud.',
       ],
     },
-    featureFlagApi: {
-      name: 'Feature Flag API',
+    fleetControl: {
+      name: 'Fleet Control',
       description:
-        'Sistema de control dinámico de funcionalidades (Feature Toggles) para arquitecturas distribuidas. Permite activar/desactivar módulos en tiempo real por entorno o cliente sin despliegues adicionales.',
+        'Backend de gestión de flotas compuesto por 9 microservicios autónomos, con datos de demostración generados por un seeder de semilla fija.',
       problem:
-        'Deployar cambios de config requiere redeploy completo. Cada deploy = riesgo de downtime + 2-5 min de cold start.',
+        'El proyecto requería servicios independientes capaces de arrancar y generar datos reproducibles sin depender de una base compartida.',
       solution:
-        'Feature toggles con Redis Pub/Sub para propagación en tiempo real. Circuit breaker para aislamiento de fallos.',
+        'Desarrollé los microservicios con Spring Boot, los empaqueté con Docker y automaticé sus pipelines con GitHub Actions.',
       decisions: [
-        'Redis Pub/Sub vs Kafka: 500MB menos de memoria por instancia',
-        'SQLite para dev, PostgreSQL para prod',
-        'Resilience4j circuit breaker para auto-protección',
+        '9 servicios autónomos con responsabilidades separadas.',
+        'Seeder de semilla fija para datos de demostración reproducibles.',
+        'Docker y GitHub Actions por servicio.',
+      ],
+    },
+    carRent: {
+      name: 'Car Rental API',
+      description:
+        'API REST de alquiler de vehículos con autenticación JWT, autorización por roles, notificaciones y reportes operativos.',
+      problem:
+        'El negocio necesitaba centralizar flota, clientes y contratos, además de generar reportes sin depender de hojas de cálculo.',
+      solution:
+        'Construí la API con Java, Spring Boot y MySQL. Incluye JWT, roles ADMIN/USER, OpenAPI, reportes PDF/Excel, alertas por WebSocket y SMS con proveedores intercambiables.',
+      decisions: [
+        'Patrón Strategy para alternar entre Twilio y Vonage mediante configuración.',
+        'WebSocket para alertas de alquileres próximos a vencer.',
+        'Flyway para migraciones versionadas del esquema.',
+        'iText y Apache POI para generar reportes PDF y Excel.',
+      ],
+    },
+    employeeManagement: {
+      name: 'Employee Management System',
+      description:
+        'Sistema full-stack para gestionar asistencia, horarios, consumos y nóminas de un bar, con reportes semanales enviados por correo.',
+      problem:
+        'El negocio necesitaba reemplazar el registro manual de asistencia y nómina por un flujo centralizado.',
+      solution:
+        'Apliqué arquitectura hexagonal con Spring Boot, migraciones Flyway sobre MySQL, seguridad JWT y reportes PDF con Thymeleaf enviados por email. El frontend usa Vue.js y Quasar.',
+      decisions: [
+        'Separación application/domain/infrastructure para aislar las reglas del negocio.',
+        'Flyway para mantener el esquema versionado.',
+        'Thymeleaf para generar los reportes semanales.',
       ],
     },
     skillLink: {
       name: 'SkillLink',
       description:
-        'Plataforma que conecta desarrolladores a través de mentorías y desafíos técnicos. Construida para Alumnithon (2025 Hackathon) de Alura Latam.',
+        'Colaboración en el backend de una plataforma de mentorías y desafíos técnicos para Alumnithon 2025.',
       problem:
-        'Los desarrolladores junior enfrentan dificultades para encontrar mentores y proyectos reales. Las plataformas existentes carecen de mentoría estructurada combinada con desafíos técnicos.',
+        'El equipo necesitaba autenticación JWT y una API de perfiles para conectar desarrolladores con mentores.',
       solution:
-        'Plataforma full-stack con autenticación JWT, chat WebSocket en tiempo real, programación de mentorías, desafíos técnicos y gestión de perfiles. Desplegada en Render.',
+        'Mi aporte: autenticación con Spring Security y JWT, API de perfiles técnicos, búsqueda filtrada, validaciones y documentación OpenAPI.',
       decisions: [
-        'Arquitectura monolítica para velocidad del MVP — diseñada para futura extracción a microservicios',
-        'WebSocket sobre polling para chat en tiempo real — menor latencia, soporte nativo de Spring',
-        'Single Table Inheritance para la jerarquía de Content — consultas más simples en MVP',
-        'HikariCP connection pooling — listo para producción sin configuración extra',
-        'Tabla por colección para tecnologías de perfil — normalizado y buscable',
+        'Registro y login con Spring Security, filtro JWT y configuración stateless.',
+        'Creación y actualización de perfiles con validación de tecnologías e intereses.',
+        'Búsqueda filtrada y control de visibilidad de perfiles.',
+        'Documentación de endpoints con OpenAPI/Swagger.',
       ],
     },
     sportPulse: {
       name: 'SportPulse',
       description:
-        'Plataforma de analítica de fútbol en tiempo real con arquitectura de microservicios. Construida por un equipo de 5 personas consumiendo datos de API-Football (RapidAPI).',
+        'Colaboración en una plataforma de analítica de fútbol con microservicios que consume datos de API-Football.',
       problem:
-        'Los datos de fútbol de APIs externas deben consumirse eficientemente y distribuirse entre servicios sin duplicar solicitudes ni exceder límites de tasa (100 req/día).',
+        'El equipo necesitaba autenticación centralizada, un gateway y servicios que consumieran la API externa sin duplicar lógica.',
       solution:
-        '7 microservicios detrás de un gateway con rate limiting Bucket4j, cache Caffeine (TTL 5 min), circuit breakers Resilience4J y PostgreSQL por servicio para independencia de esquemas.',
+        'Mi aporte: servicio de autenticación con JWT, gateway con propagación de identidad y rate limiting, y microservicios de fixtures, standings, equipos y ligas.',
       decisions: [
-        'Microservicios sobre monolite — notificaciones requiere escalado independiente',
-        'Feign síncrono sobre mensajería asíncrona — simplicidad inicial, baja necesidad de consistencia eventual',
-        'PostgreSQL por servicio — independencia de esquemas, evita cuello de botella de BD única',
-        'Cache Caffeine en memoria sobre Redis — operaciones más simples, cada servicio gestiona sus datos',
-        'Bucket4j en gateway — punto de control único para rate limiting',
-        'Resilience4J circuit breakers — evita cascadas de fallos entre servicios',
+        'Servicio de autenticación con registro, login, JWT y pruebas.',
+        'Gateway con enrutamiento, propagación de JWT y rate limiting con Redis.',
+        'Fixtures y standings integrados con API-Football mediante OpenFeign.',
+        'Caché Redis, Dockerfiles, Compose y documentación de red.',
       ],
     },
     swissRoute: {
       name: 'SwissRoute',
       description:
-        'Backend para planificación y seguimiento de viajes en transporte público. Integra la Swiss Public Transport API (opendata.ch) con capa de persistencia PostgreSQL.',
+        'Colaboración en el backend de planificación de viajes en transporte público suizo, integrado con transport.opendata.ch.',
       problem:
-        'Los usuarios necesitan un backend unificado para buscar conexiones de transporte público suizo, guardar rutas favoritas y rastrear historial de búsquedas consumiendo una API externa sin sobrecargar.',
+        'El equipo necesitaba persistencia versionada, autenticación y endpoints para buscar estaciones y conexiones sin acoplar la API externa al dominio.',
       solution:
-        'API REST con Spring Boot y WebClient para consumo de API externa, PostgreSQL para datos de usuario (favoritos, historial), migraciones Flyway y documentación Swagger.',
+        'Mi aporte: persistencia con PostgreSQL y Flyway, autenticación JWT y endpoints de estaciones y conexiones, con pruebas unitarias e integración.',
       decisions: [
-        'WebClient sobre RestTemplate — llamadas HTTP reactivas y no bloqueantes a la API externa',
-        'Datos de API externa devueltos en tiempo real — no se cachean, los datos de transporte cambian constantemente',
-        'PostgreSQL para persistencia — datos relacionales estructurados con migraciones Flyway',
-        'Capa de mapeo DTO para desacoplar respuestas de API externa de los modelos internos',
-        'Historial de búsquedas registrado automáticamente en cada consulta de conexiones — sin acción extra del usuario',
-      ],
-    },
-    carRent: {
-      name: 'CarRent',
-      description:
-        'Sistema integral de gestión de alquiler de vehículos con seguridad JWT, notificaciones SMS, alertas en tiempo real vía WebSocket y generación de reportes dinámicos (PDF/Excel).',
-      problem:
-        'Los negocios de alquiler de vehículos carecen de un sistema integrado para gestionar flota, clientes, contratos y generar reportes operativos — dependiendo de hojas de cálculo y seguimiento manual.',
-      solution:
-        'API REST con Spring Security + JWT para acceso por roles (ADMIN/USER), migraciones Flyway, mapeo DTO con MapStruct, SMS multi-proveedor (Twilio/Vonage), alertas WebSocket y reportes con iText/Apache POI.',
-      decisions: [
-        'Patrón Strategy para proveedores SMS — intercambiar Twilio/Vonage vía config sin cambiar código',
-        'WebSocket push sobre polling — alertas instantáneas a administradores por alquileres por vencer',
-        'Flyway sobre ddl-auto de JPA — migraciones versionadas y auditables de esquema',
-        'Capa DTO con MapStruct — desacopla contratos API de entidades JPA',
-        'iText + Apache POI para reportes — genera PDF y Excel sin vendor lock-in',
-      ],
-    },
-    employeeManagement: {
-      name: 'Employee Management',
-      description:
-        'Sistema full-stack de gestión de empleados para un bar control de asistencia, horarios, consumos, nóminas y reportes semanales automatizados con envío por email.',
-      problem:
-        'Los bares pequeños carecen de un sistema accesible para gestionar empleados, rastrear asistencia, controlar consumos y generar reportes de nómina dependiendo de papel y lápiz.',
-      solution:
-        'API REST con Spring Boot y JWT, migraciones Flyway, reportes PDF semanales automatizados vía Thymeleaf + email, y frontend Vue.js/Quasar para gestión en tiempo real.',
-      decisions: [
-        'Full-stack (Spring + Vue/Quasar) sobre monolitico — contrato API claro, independencia del frontend',
-        'Thymeleaf para plantillas de email — renderizado del lado del servidor para reportes PDF',
-        'Migraciones Flyway sobre ddl-auto — esquema versionado para producción',
-        'H2 en memoria para dev, MySQL para prod — desarrollo local sin configuración',
-        'Reportes semanales automatizados vía tareas programadas — sin generación manual de reportes',
-      ],
-    },
-    pymesAdmin: {
-      name: 'PymeQ',
-      description:
-        'Plataforma SaaS multi-tenant de gestión financiera con toolkit de contabilidad forense impulsado por IA para PYMEs LATAM. 310 tests en 3 servicios backend.',
-      problem:
-        'Las PYMEs LATAM carecen de herramientas de gestión financiera accesibles con aislamiento multi-tenant adecuado, detección de anomalías por IA y reglas contables LATAM.',
-      solution:
-        'Arquitectura de 3 microservicios (Auth + Gateway + Core) con OAuth2/JWT, PostgreSQL multi-schema, Redis caching, frontend Vue.js/Quasar PWA y CI/CD en Oracle Cloud.',
-      decisions: [
-        'PostgreSQL multi-schema sobre BD separadas — backups más simples y compartición entre tenants',
-        'Gateway WebFlux sobre MVC — enrutamiento no bloqueante, mejora bajo tenants concurrentes',
-        'OAuth2 + JWT sobre sesiones — stateless, refresh tokens, login con Google OAuth2',
-        'Redis para blacklist + cache — invalidación JWT y cache de permisos en un solo servicio',
-        'GitHub Actions + Docker multi-arch — un solo CI/CD para x86 y ARM64 (Oracle Free Tier)',
-        'PWA sobre app nativa — deploy instantáneo, sin app store, funciona offline para facturas',
+        'Búsqueda de estaciones por texto y por coordenadas GPS.',
+        'Conexiones con hasta cinco paradas intermedias validadas en el borde.',
+        'WebClient con timeouts y manejo explícito de errores de la API externa.',
+        'Migraciones Flyway, pruebas con PostgreSQL y documentación Swagger.',
       ],
     },
   },
   contact: {
     title: 'CONTACTO',
     eyebrow: 'HABLEMOS',
-    name: 'Nombre',
-    email: 'Correo',
-    message: 'Mensaje',
-    submit: 'Enviar Mensaje',
-    sent: 'Mensaje enviado. Te responderé pronto.',
-    error: 'Algo salió mal. Intenta de nuevo.',
-    open: 'Envíame un mensaje',
+    emailLabel: 'Escribir email',
+    copy: 'Copiar email',
+    copied: 'Email copiado',
     close: 'Cerrar',
-    cooldown: 'Espera un momento antes de enviar otro mensaje.',
-    nameRequired: 'El nombre es obligatorio.',
-    emailRequired: 'El correo es obligatorio.',
-    emailInvalid: 'Ingresa un correo válido.',
-    messageRequired: 'El mensaje es obligatorio.',
   },
   about: {
-    metaTitle: 'Sobre Mí — Diógenes Quintero',
+    metaTitle: 'Sobre mí — Diógenes Quintero',
     metaDescription:
-      'Backend Java Developer especializado en Spring Boot, APIs robustas y arquitectura limpia. Java 21, Docker, PostgreSQL, Redis.',
+      'Desarrollador backend Java con experiencia en Spring Boot, autenticación, PostgreSQL y despliegue de servicios.',
     title: 'Diógenes Quintero',
-    subtitle: 'Backend Java Developer',
-    bio: 'Construyo software enfocado en seguridad y robustez. Con experiencia en APIs, infraestructura y todo el ecosistema backend, entrego sistemas mantenibles, performantes y listos para producción.',
-    whatIBring: 'Lo Que Llevo al Equipo',
+    subtitle: 'Desarrollador Backend Java',
+    bio: 'Desarrollo APIs y servicios con Java y Spring Boot. Mi trabajo reciente se centra en autenticación, validación de identidad en el gateway y despliegue continuo. Documento las decisiones y mantengo pruebas sobre los flujos críticos.',
+    whatIBring: 'Cómo aporto a un equipo',
     skillsEyebrow: 'HABILIDADES',
     connectEyebrow: 'CONECTEMOS',
     connectTitle: 'Conectemos',
     skills: {
       robust: {
-        title: 'Sistemas que no fallan',
-        text: 'Health checks, degradación gradual y aislamiento de fallos en cada servicio. Construyo sistemas que anticipan fallos y los manejan sin romperse.',
+        title: 'Autenticación y seguridad',
+        text: 'OAuth2, JWT, rotación de refresh tokens, RBAC y validación de identidad en el borde de la API.',
       },
       economical: {
-        title: 'Infraestructura eficiente',
-        text: 'Uso optimizado de recursos mediante JVM tuning, caching inteligente y mínima sobrecarga. Rendimiento a través de ingeniería, no de sobre-aprovisionamiento.',
+        title: 'Operación y despliegue',
+        text: 'Docker, CI/CD con GitHub Actions, imágenes multi-arquitectura y configuración por entorno.',
       },
       maintainable: {
-        title: 'Código que se mantiene',
-        text: 'Arquitectura hexagonal, modular y limpia. Código que otros pueden entender, probar y modificar con confianza.',
+        title: 'Código mantenible',
+        text: 'Separación de responsabilidades, migraciones versionadas y pruebas de integración contra dependencias reales.',
       },
       learner: {
-        title: 'Aprendiz continuo',
-        text: 'Cada proyecto enseña algo nuevo. Me mantengo al día con el ecosistema a través de trabajo práctico, open source y estudio continuo.',
+        title: 'Aprendizaje continuo',
+        text: 'Practico con proyectos propios y colaboraciones, y reviso lo que cambia en el ecosistema Java y en las herramientas de despliegue.',
       },
     },
     downloadCvEs: 'Descargar CV (ES)',
@@ -273,7 +236,7 @@ export default {
     security: 'SEGURIDAD / DOCS',
   },
   errors: {
-    notFound: 'Oops. No hay nada aquí...',
-    goHome: 'Ir al Inicio',
+    notFound: 'No hay nada aquí.',
+    goHome: 'Ir al inicio',
   },
 }

@@ -1,11 +1,9 @@
 <template>
   <q-page class="index-page q-pa-md q-pa-lg-lg">
     <div class="index-page__inner">
-      <HeroSection
-        @scroll-to-contact="scrollTo('contacto-section')"
-      />
+      <HeroSection @scroll-to-contact="scrollTo('contacto-section')" />
 
-      <ServicesSection class="index-page__section" />
+      <HomeProjects class="index-page__section" />
 
       <BadgeStack class="index-page__section" />
 
@@ -16,22 +14,24 @@
 
 <script setup>
 import { useMeta } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import HeroSection from 'components/HeroSection.vue'
-import ServicesSection from 'components/ServicesSection.vue'
+import HomeProjects from 'components/HomeProjects.vue'
 import BadgeStack from 'components/BadgeStack.vue'
 import ContactSection from 'components/ContactSection.vue'
 import { useScrollAnimation } from 'src/composables/useScrollAnimation'
 
-useMeta({
-  title: 'Diogenes Quintero — Backend Java Developer',
+const { t } = useI18n()
+
+useMeta(() => ({
+  title: t('home.metaTitle'),
   meta: {
     description: {
       name: 'description',
-      content:
-        'Backend Java Developer. Building reliable systems with Java 21, Spring Boot, and Docker.',
+      content: t('home.metaDescription'),
     },
   },
-})
+}))
 
 const scrollTo = (id) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })

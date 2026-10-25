@@ -37,7 +37,7 @@ export default defineConfig((/* ctx */) => {
         node: 'node22',
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // Nginx falls back to index.html for client routes
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,

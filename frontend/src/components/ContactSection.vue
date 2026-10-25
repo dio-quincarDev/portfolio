@@ -2,168 +2,85 @@
   <section id="contacto-section" class="contact reveal">
     <SectionHeader :eyebrow="$t('contact.eyebrow')" :title="$t('contact.title')" />
 
-    <div class="contact__cta-row">
-      <q-btn
-        :label="$t('contact.open')"
-        unelevated
-        no-caps
-        class="contact__cta"
-        @click="modalOpen = true"
-      />
+    <div class="contact__row">
+      <a :href="`mailto:${email}`" class="btn btn--primary">
+        {{ $t('contact.emailLabel') }}
+      </a>
+      <button class="btn btn--outline" type="button" @click="copyEmail">
+        {{ copied ? $t('contact.copied') : $t('contact.copy') }}
+      </button>
     </div>
 
-    <q-dialog v-model="modalOpen">
-      <q-card class="contact__modal">
-        <q-card-section class="contact__modal-body">
-          <q-form @submit.prevent="handleSubmit" class="contact__form">
-            <q-input
-              v-model="form.name"
-              :label="$t('contact.name')"
-              outlined
-              dense
-              color="accent"
-              class="contact__field"
-              :rules="[(val) => !!val || $t('contact.nameRequired')]"
-              hide-bottom-space
-            />
-
-            <q-input
-              v-model="form.email"
-              :label="$t('contact.email')"
-              outlined
-              dense
-              type="email"
-              color="accent"
-              class="contact__field"
-              :rules="[
-                (val) => !!val || $t('contact.emailRequired'),
-                (val) => /.+@.+\..+/.test(val) || $t('contact.emailInvalid'),
-              ]"
-              hide-bottom-space
-            />
-
-            <div style="display: none" aria-hidden="true">
-              <input v-model="form.honeypot" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <q-input
-              v-model="form.message"
-              :label="$t('contact.message')"
-              outlined
-              dense
-              type="textarea"
-              color="accent"
-              class="contact__field"
-              :rules="[(val) => !!val || $t('contact.messageRequired')]"
-              hide-bottom-space
-              :input-style="{ minHeight: '80px' }"
-            />
-
-            <div class="contact__submit-row">
-              <q-btn
-                flat
-                no-caps
-                class="contact__cancel"
-                @click="modalOpen = false"
-              >
-                {{ $t('contact.close') }}
-              </q-btn>
-              <q-btn
-                type="submit"
-                :label="$t('contact.submit')"
-                unelevated
-                no-caps
-                :loading="sending"
-                :disable="sending || !!form.honeypot"
-                class="contact__submit"
-              />
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <nav :aria-label="$t('nav.socialLinks')" class="contact__social">
+      <q-btn
+        flat round
+        icon="mdi-github"
+        href="https://github.com/dio-quincarDev"
+        target="_blank" rel="noopener noreferrer"
+        color="secondary"
+        aria-label="GitHub"
+      />
+      <q-btn
+        flat round
+        href="https://x.com/DioQuincar"
+        target="_blank" rel="noopener noreferrer"
+        color="secondary"
+        aria-label="X (Twitter)"
+      >
+        <q-icon size="18px">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="fill: currentColor; width: 18px; height: 18px">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+          </svg>
+        </q-icon>
+      </q-btn>
+      <q-btn
+        flat round
+        icon="mdi-linkedin"
+        href="https://linkedin.com/in/dio-quincar"
+        target="_blank" rel="noopener noreferrer"
+        color="secondary"
+        aria-label="LinkedIn"
+      />
+    </nav>
   </section>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import SectionHeader from 'components/SectionHeader.vue'
-import { useContactForm } from 'src/composables/useContactForm'
 
-const modalOpen = ref(false)
+// Email público en el CV; directo y sin intermediarios.
+const email = 'dio-quincar@outlook.com'
 
-const { form, sending, sendContact } = useContactForm()
+const copied = ref(false)
+let resetTimer
 
-const handleSubmit = async () => {
-  const ok = await sendContact()
-  if (ok) modalOpen.value = false
+const copyEmail = async () => {
+  try {
+    await navigator.clipboard.writeText(email)
+    copied.value = true
+    clearTimeout(resetTimer)
+    resetTimer = setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch {
+    // Clipboard bloqueado: el botón de email sigue siendo el camino.
+  }
 }
 </script>
 
 <style scoped>
-.contact__cta-row {
+.contact__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.contact__social {
   display: flex;
   justify-content: center;
-}
-
-.contact__cta {
-  background: var(--accent);
-  color: #fff;
-  padding: 10px 32px;
-  font-size: 14px;
-  font-family: 'Sora', sans-serif;
-  border-radius: 6px;
-}
-
-.contact__cta:hover {
-  filter: brightness(1.1);
-}
-
-.contact__modal {
-  max-width: 420px;
-  width: 90vw;
-  border-radius: 12px;
-  background: var(--surface);
-}
-
-.contact__modal-body {
-  padding: 24px;
-}
-
-.contact__field {
-  margin-bottom: 4px;
-}
-
-.contact__field :deep(.q-field__control) {
-  background: var(--bg);
-  border-radius: 6px;
-}
-
-.contact__submit-row {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.contact__cancel {
-  font-family: 'Sora', sans-serif;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.contact__submit {
-  background: var(--accent);
-  color: #fff;
-  padding: 6px 24px;
-  font-size: 13px;
-  font-family: 'Sora', sans-serif;
-  border-radius: 6px;
-  min-width: 120px;
-}
-
-.contact__submit:hover {
-  filter: brightness(1.1);
+  gap: 4px;
+  margin-top: 20px;
 }
 </style>

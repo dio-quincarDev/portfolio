@@ -1,115 +1,103 @@
 <template>
   <article v-if="project" class="project-detail">
-    <template v-if="project.comingSoon">
-      <div class="project-detail__coming">
-        <h2 class="project-detail__coming-title">{{ projectName }}</h2>
-        <p class="project-detail__coming-text">{{ projectDescription }}</p>
-      </div>
-    </template>
-
-    <template v-else>
-      <div v-if="project.status === 'in-progress'" class="project-detail__wip">
-        <span class="project-detail__wip-dot" aria-hidden="true"></span>
-        {{ $t('projects.inProgress') }}
-      </div>
-      <div class="project-detail__head">
-        <h2 class="project-detail__name">{{ projectName }}</h2>
-        <div class="project-detail__links">
-          <a
-            v-if="project.repoUrl"
-            class="project-detail__icon-link"
-            :href="project.repoUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="$t('projects.viewSource')"
-          >
-            <q-icon :name="mdiGithub" size="20px" />
-          </a>
-          <a
-            v-if="project.youtubeUrl"
-            class="project-detail__icon-link"
-            :href="project.youtubeUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="$t('projects.viewVideo')"
-          >
-            <q-icon :name="mdiYoutube" size="20px" />
-          </a>
-        </div>
-      </div>
-
-      <p class="project-detail__desc">{{ projectDescription }}</p>
-
-      <div v-if="projectProblem" class="project-detail__case">
-        <div class="case-block">
-          <div class="case-block__label case-block__label--problem">
-            {{ $t('projects.theProblem') }}
-          </div>
-          <p class="case-block__text">{{ projectProblem }}</p>
-        </div>
-        <div class="case-block">
-          <div class="case-block__label case-block__label--solution">
-            {{ $t('projects.theSolution') }}
-          </div>
-          <p class="case-block__text">{{ projectSolution }}</p>
-        </div>
-        <div v-if="projectDecisions.length" class="case-block">
-          <div class="case-block__label case-block__label--decisions">
-            {{ $t('projects.keyDecisions') }}
-          </div>
-          <ul class="case-block__list">
-            <li v-for="(decision, i) in projectDecisions" :key="i">{{ decision }}</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="project-detail__tech">
-        <span
-          v-for="tech in project.tech"
-          :key="tech.name"
-          class="tech-chip"
-          :aria-label="tech.name"
+    <div class="project-detail__head">
+      <h2 class="project-detail__name">{{ projectName }}</h2>
+      <div class="project-detail__links">
+        <a
+          v-if="project.repoUrl"
+          class="project-detail__icon-link"
+          :href="project.repoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          :aria-label="$t('projects.viewSource')"
         >
-          <span class="tech-chip__dot" aria-hidden="true"></span>
-          {{ tech.name }}
-        </span>
+          <q-icon :name="mdiGithub" size="20px" />
+        </a>
+        <a
+          v-if="project.youtubeUrl"
+          class="project-detail__icon-link"
+          :href="project.youtubeUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          :aria-label="$t('projects.viewVideo')"
+        >
+          <q-icon :name="mdiYoutube" size="20px" />
+        </a>
       </div>
+    </div>
 
-      <div v-if="hasMedia" class="project-detail__media">
-        <div v-if="project.diagramUrl" class="media-block">
-          <div class="media-block__label">{{ $t('projects.diagram') }}</div>
+    <p class="project-detail__desc">{{ projectDescription }}</p>
+
+    <div v-if="projectProblem" class="project-detail__case">
+      <div class="case-block">
+        <div class="case-block__label case-block__label--problem">
+          {{ contextLabel }}
+        </div>
+        <p class="case-block__text">{{ projectProblem }}</p>
+      </div>
+      <div class="case-block">
+        <div class="case-block__label case-block__label--solution">
+          {{ solutionLabel }}
+        </div>
+        <p class="case-block__text">{{ projectSolution }}</p>
+      </div>
+      <div v-if="projectDecisions.length" class="case-block">
+        <div class="case-block__label case-block__label--decisions">
+          {{ decisionsLabel }}
+        </div>
+        <ul class="case-block__list">
+          <li v-for="(decision, i) in projectDecisions" :key="i">{{ decision }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-detail__tech">
+      <span
+        v-for="tech in project.tech"
+        :key="tech.name"
+        class="tech-chip"
+      >
+        <span class="tech-chip__dot" aria-hidden="true"></span>
+        {{ tech.name }}
+      </span>
+    </div>
+
+    <div v-if="hasMedia" class="project-detail__media">
+      <div v-if="project.diagramUrl" class="media-block">
+        <div class="media-block__label">{{ $t('projects.diagram') }}</div>
+        <a :href="project.diagramUrl" target="_blank" rel="noopener noreferrer">
           <img
             :src="project.diagramUrl"
             :alt="`${projectName} — ${$t('projects.diagram')}`"
             class="media-block__img"
             loading="lazy"
           />
-        </div>
-        <div v-if="project.demoUrl" class="media-block">
-          <a
-            :href="project.demoUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn--outline media-block__btn"
-          >
-            {{ $t('projects.tryDemo') }}
-          </a>
-        </div>
-        <div v-if="project.youtubeUrl" class="media-block">
-          <div class="media-block__label">{{ $t('projects.video') }}</div>
-          <div class="media-block__embed">
-            <iframe
-              :src="youtubeEmbedUrl"
-              :title="`${projectName} — ${$t('projects.video')}`"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              loading="lazy"
-            />
-          </div>
+        </a>
+      </div>
+      <div v-if="project.demoUrl" class="media-block">
+        <a
+          :href="project.demoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn--outline media-block__btn"
+        >
+          {{ $t('projects.tryDemo') }}
+        </a>
+      </div>
+      <div v-if="project.youtubeUrl" class="media-block">
+        <div class="media-block__label">{{ $t('projects.video') }}</div>
+        <div class="media-block__embed">
+          <iframe
+            :src="youtubeEmbedUrl"
+            :title="`${projectName} — ${$t('projects.video')}`"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          />
         </div>
       </div>
-    </template>
+    </div>
   </article>
 
   <div v-else class="project-detail__empty">
@@ -126,7 +114,7 @@ const props = defineProps({
   project: { type: Object, default: null },
 })
 
-const { t } = useI18n()
+const { t, tm, rt } = useI18n()
 
 const projectName = computed(() =>
   props.project?.i18nKey ? t(`${props.project.i18nKey}.name`) : '',
@@ -142,9 +130,19 @@ const projectSolution = computed(() =>
 )
 const projectDecisions = computed(() => {
   if (!props.project?.i18nKey) return []
-  const decisions = t(`${props.project.i18nKey}.decisions`)
-  return Array.isArray(decisions) ? decisions : []
+  const decisions = tm(`${props.project.i18nKey}.decisions`)
+  return Array.isArray(decisions) ? decisions.map((item) => rt(item)) : []
 })
+
+const contextLabel = computed(() =>
+  props.project?.contribution ? t('projects.context') : t('projects.theProblem'),
+)
+const solutionLabel = computed(() =>
+  props.project?.contribution ? t('projects.contribution') : t('projects.theSolution'),
+)
+const decisionsLabel = computed(() =>
+  props.project?.contribution ? t('projects.components') : t('projects.keyDecisions'),
+)
 
 const youtubeEmbedUrl = computed(() => {
   if (!props.project?.youtubeUrl) return ''
@@ -160,60 +158,6 @@ const hasMedia = computed(() =>
 </script>
 
 <style scoped>
-.project-detail__coming {
-  text-align: center;
-  padding: 48px 24px;
-}
-
-.project-detail__coming-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--muted);
-  margin: 0 0 12px;
-}
-
-.project-detail__coming-text {
-  font-family: 'Sora', sans-serif;
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--subtle);
-  margin: 0;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.project-detail__wip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 9999px;
-  padding: 4px 12px;
-  margin-bottom: 16px;
-  width: fit-content;
-}
-
-.project-detail__wip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
 .project-detail__head {
   display: flex;
   align-items: center;

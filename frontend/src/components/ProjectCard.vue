@@ -1,17 +1,8 @@
 <template>
-  <div
-    class="project-card"
-    :class="{ 'project-card--coming': project.comingSoon }"
-    role="button"
-    tabindex="0"
-    :aria-label="cardLabel"
-    @click="$emit('select', project.id)"
-    @keydown.enter="$emit('select', project.id)"
-    @keydown.space.prevent="$emit('select', project.id)"
-  >
+  <article class="project-card">
     <div class="project-card__head">
       <h3 class="project-card__name">{{ cardTitle }}</h3>
-      <div v-if="!project.comingSoon" class="project-card__links" @click.stop>
+      <div class="project-card__links">
         <a
           v-if="project.repoUrl"
           class="project-card__icon-link"
@@ -37,25 +28,19 @@
 
     <p class="project-card__desc">{{ cardDescription }}</p>
 
-    <template v-if="!project.comingSoon">
-      <div class="project-card__tech">
-        <span
-          v-for="tech in project.tech.slice(0, 4)"
-          :key="tech.name"
-          class="tech-chip"
-          :aria-label="tech.name"
-        >
-          <span class="tech-chip__dot" aria-hidden="true"></span>
-          {{ tech.name }}
-        </span>
-        <span v-if="project.tech.length > 4" class="tech-chip tech-chip--more">
-          +{{ project.tech.length - 4 }}
-        </span>
-      </div>
-    </template>
-
-    <div v-if="project.comingSoon" class="project-card__badge">Coming Soon</div>
-    <div v-else-if="project.status === 'in-progress'" class="project-card__badge project-card__badge--wip">In Progress</div>
+    <div class="project-card__tech">
+      <span
+        v-for="tech in project.tech.slice(0, 4)"
+        :key="tech.name"
+        class="tech-chip"
+      >
+        <span class="tech-chip__dot" aria-hidden="true"></span>
+        {{ tech.name }}
+      </span>
+      <span v-if="project.tech.length > 4" class="tech-chip tech-chip--more">
+        +{{ project.tech.length - 4 }}
+      </span>
+    </div>
 
     <div class="project-card__arrow" aria-hidden="true">
       <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
@@ -63,7 +48,14 @@
         <path d="M19 6H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </div>
-  </div>
+
+    <button
+      class="project-card__open"
+      type="button"
+      :aria-label="`${$t('projects.openProject')}: ${cardTitle}`"
+      @click="$emit('select', project.id)"
+    />
+  </article>
 </template>
 
 <script setup>
@@ -79,20 +71,15 @@ defineEmits(['select'])
 
 const { t } = useI18n()
 
-const cardTitle = computed(() => {
-  if (props.project.comingSoon) return t('projects.comingSoon.name')
-  return props.project.i18nKey ? t(`${props.project.i18nKey}.name`) : props.project.name || ''
-})
+const cardTitle = computed(() =>
+  props.project.i18nKey ? t(`${props.project.i18nKey}.name`) : props.project.name || '',
+)
 
-const cardDescription = computed(() => {
-  if (props.project.comingSoon) return t('projects.comingSoon.description')
-  return props.project.i18nKey ? t(`${props.project.i18nKey}.description`) : props.project.description || ''
-})
-
-const cardLabel = computed(() => {
-  if (props.project.comingSoon) return `Coming Soon — ${cardDescription.value}`
-  return cardTitle.value
-})
+const cardDescription = computed(() =>
+  props.project.i18nKey
+    ? t(`${props.project.i18nKey}.description`)
+    : props.project.description || '',
+)
 </script>
 
 <style scoped>
@@ -103,8 +90,6 @@ const cardLabel = computed(() => {
   padding: 24px;
   position: relative;
   overflow: hidden;
-  text-decoration: none;
-  cursor: pointer;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -121,34 +106,21 @@ const cardLabel = computed(() => {
       transform: translateX(0);
     }
   }
+}
+
+.project-card__open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
 
   &:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.project-card--coming {
-  border-style: dashed;
-  border-color: var(--subtle);
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--muted);
-    transform: none;
-    box-shadow: none;
-  }
-
-  .project-card__name {
-    color: var(--muted);
-  }
-
-  .project-card__desc {
-    color: var(--subtle);
-  }
-
-  .project-card__arrow {
-    opacity: 0.4;
+    outline-offset: -2px;
   }
 }
 
@@ -171,6 +143,8 @@ const cardLabel = computed(() => {
   display: flex;
   gap: 6px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .project-card__icon-link {
@@ -229,24 +203,6 @@ const cardLabel = computed(() => {
   border-radius: 50%;
   background: var(--accent);
   flex-shrink: 0;
-}
-
-.project-card__badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--subtle);
-  border: 1px solid var(--subtle);
-  border-radius: 9999px;
-  padding: 3px 10px;
-  width: fit-content;
-}
-
-.project-card__badge--wip {
-  color: var(--accent);
-  border-color: var(--accent);
 }
 
 .project-card__arrow {

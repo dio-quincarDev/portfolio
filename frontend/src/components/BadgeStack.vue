@@ -35,14 +35,16 @@ const groups = [
   {
     i18nKey: 'languages',
     color: '#ED8B00',
-    items: [{ name: 'Java' }],
+    items: [{ name: 'Java' }, { name: 'SQL' }],
   },
   {
     i18nKey: 'frameworks',
     color: '#6DB33F',
     items: [
       { name: 'Spring Boot' },
+      { name: 'Spring Security' },
       { name: 'Spring Cloud Gateway' },
+      { name: 'Vue.js' },
     ],
   },
   {
@@ -59,15 +61,17 @@ const groups = [
     color: '#2496ED',
     items: [
       { name: 'Docker' },
-      { name: 'CI/CD' },
       { name: 'GitHub Actions' },
+      { name: 'Nginx' },
+      { name: 'Oracle Cloud' },
     ],
   },
   {
     i18nKey: 'testing',
     color: '#25A162',
     items: [
-      { name: 'JUnit 5' },
+      { name: 'JUnit' },
+      { name: 'Testcontainers' },
       { name: 'Maven' },
     ],
   },
@@ -75,8 +79,6 @@ const groups = [
     i18nKey: 'security',
     color: '#D4A84B',
     items: [
-      { name: 'Resilience4j' },
-      { name: 'Spring Security' },
       { name: 'OAuth2' },
       { name: 'JWT' },
       { name: 'Swagger/OpenAPI' },

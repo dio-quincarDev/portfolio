@@ -58,7 +58,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useMeta } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import SectionHeader from 'components/SectionHeader.vue'
@@ -67,18 +66,15 @@ import { useScrollAnimation } from 'src/composables/useScrollAnimation'
 
 const { t } = useI18n()
 
-const pageTitle = computed(() => t('about.metaTitle'))
-const pageDescription = computed(() => t('about.metaDescription'))
-
-useMeta({
-  title: pageTitle,
+useMeta(() => ({
+  title: t('about.metaTitle'),
   meta: {
     description: {
       name: 'description',
-      content: pageDescription,
+      content: t('about.metaDescription'),
     },
   },
-})
+}))
 
 const skillKeys = ['robust', 'economical', 'maintainable', 'learner']
 

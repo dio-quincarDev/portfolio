@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">{{ $t('nav.skipToContent') }}</a>
     <q-header class="noc-header">
       <div class="header-frame" aria-hidden="true"></div>
       <q-toolbar dense class="noc-toolbar">
@@ -53,7 +53,7 @@
           />
         </div>
 
-        <nav aria-label="Main navigation" class="row items-center no-wrap gt-xs">
+        <nav :aria-label="$t('nav.mainNavigation')" class="row items-center no-wrap gt-xs">
           <div class="row items-center no-wrap q-gutter-x-xs">
             <button
               class="nav-btn text-mono"
@@ -86,7 +86,7 @@
 
           <span class="nav-sep" aria-hidden="true">│</span>
 
-          <nav aria-label="Social links" class="row items-center no-wrap">
+          <nav :aria-label="$t('nav.socialLinks')" class="row items-center no-wrap">
             <q-btn
               flat round
               icon="mdi-github"
@@ -127,7 +127,7 @@
       overlay
       behavior="mobile"
       class="noc-drawer"
-      aria-label="Navigation menu"
+      :aria-label="$t('nav.menu')"
     >
       <div class="drawer-inner">
         <div class="drawer-toggles">
