@@ -1,6 +1,6 @@
-# Portfolio - Diogenes Quintero
+# Portfolio — Diógenes Quintero
 
-Personal portfolio built with Quasar (Vue 3), deployed on Oracle Cloud Infrastructure (OCI) Free Tier.
+Personal site built with Quasar (Vue 3) and deployed as a static SPA on Oracle Cloud Infrastructure.
 
 **Live:** https://dioquincar.dev
 
@@ -12,16 +12,16 @@ Personal portfolio built with Quasar (Vue 3), deployed on Oracle Cloud Infrastru
 Internet
    |
    v
-Cloudflare (DNS + SSL)
+Cloudflare (DNS + TLS)
    |
    v
-OCI Instance (Docker)
+OCI instance (Docker)
    |
    v
 Nginx (static SPA)
 ```
 
-Single container. Static files. No backend runtime.
+One container. Static files. No backend runtime.
 
 ---
 
@@ -31,7 +31,7 @@ Single container. Static files. No backend runtime.
 |-------|-----------|
 | Framework | Quasar 2 + Vue 3 |
 | Language | JavaScript (Composition API) |
-| Styling | SCSS + CSS Custom Properties |
+| Styling | SCSS + CSS custom properties |
 | i18n | vue-i18n (ES/EN) |
 | Build | Vite |
 | Deploy | Docker + Nginx |
@@ -39,66 +39,86 @@ Single container. Static files. No backend runtime.
 
 ---
 
-## Local Development
+## Local development
 
-Requirements: Node.js 22, Docker (optional).
+Requirements: Node.js 22.
 
 ```bash
-git clone https://github.com/dio-quincarDev/portfolio.git
-cd portfolio/frontend
-npm install --legacy-peer-deps
+cd frontend
+npm ci --legacy-peer-deps
 npm run dev
+```
+
+Validation:
+
+```bash
+npm run lint
+npm run build
 ```
 
 ---
 
 ## Deploy
 
-Every push to `main` triggers:
+Every push to `main` that touches `frontend/**`, `docker-compose.yml`, or the workflow triggers:
 
-1. **Lint** -- ESLint validation
-2. **Docker** -- Multi-architecture image (amd64 + arm64) pushed to Docker Hub
-3. **Deploy** -- SCP docker-compose.yml to OCI VM, pull new image, restart
+1. **Validate** — install with `npm ci`, run ESLint and a production build.
+2. **Docker** — build and push a multi-architecture image (amd64 + arm64) to Docker Hub.
+3. **Deploy** — copy `docker-compose.yml` to the OCI VM, pull the new image, restart the container.
+
+Manual deploy:
 
 ```bash
-# Manual deploy
 docker compose up -d
 ```
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
 portfolio/
   frontend/
     src/
-      pages/          # Home, About
-      components/     # Hero, Philosophy, Projects, TerminalDots
-      composables/    # useScrollAnimation
+      pages/          # Home, projects, about, 404
+      components/     # Hero, projects, contact, stack, layout pieces
+      composables/    # Project data, contact form, scroll reveal
       i18n/           # ES/EN translations
-      css/            # Global styles, variables
+      css/            # Global styles and variables
+    public/
+      cv/             # Spanish and English CV PDFs
+      images/         # Project diagrams
     Dockerfile        # Multi-stage: Node build, Nginx serve
-
-  backend/            # Reference only (not deployed)
-    portfolio-gateway/
-    feat-flag-api-bytes-colabs/
+    nginx.conf        # SPA fallback and rate limits
 
   docker-compose.yml
   .github/workflows/deploy.yml
 ```
 
+The retired Spring backend is archived outside this repository in `../archive/portfolio-backend-2026-10-25/`.
+
+---
+
+## Content
+
+- **Featured project:** Pymeq — Forensic Accounting.
+- **Selected projects:** Fleet Control, Car Rental API, Employee Management System.
+- **Collaborations:** SkillLink, SportPulse, SwissRoute, with the specific contribution stated in each case.
+- **CV:** Spanish and English PDFs under `public/cv/`.
+
+The site is an SPA, not a PWA. It has no service worker or offline mode.
+
 ---
 
 ## Brand
 
-- **Positioning:** Backend developer who builds resilient systems on free-tier infrastructure
-- **Voice:** Direct, practical, no buzzwords
-- **Palette:** Cream (#f2efe9) / Teal (#073b4c) / Coral (#ef476f)
-- **Type:** JetBrains Mono (display) + IBM Plex Sans (body)
+- **Positioning:** Backend Java developer focused on authentication, APIs, and deployment.
+- **Voice:** Direct, sober, no buzzwords.
+- **Palette:** Cream `#f2efe9` / Teal `#073b4c` / Coral `#ef476f`.
+- **Type:** DM Serif Display, Sora, JetBrains Mono.
 
 ---
 
 ## Author
 
-**Diogenes Quintero** -- https://dioquincar.dev
+**Diógenes Quintero** — https://dioquincar.dev

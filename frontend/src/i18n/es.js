@@ -7,6 +7,7 @@ export default {
     toggleDark: 'Cambiar modo oscuro',
     toggleMenu: 'Abrir/cerrar menú de navegación',
     skipToContent: 'Ir al contenido principal',
+    cv: 'CV',
     mainNavigation: 'Navegación principal',
     socialLinks: 'Enlaces sociales',
     menu: 'Menú de navegación',
@@ -46,7 +47,6 @@ export default {
       'Desarrollo APIs y servicios con Java y Spring Boot, con foco en autenticación, seguridad y despliegue.',
     cta: {
       projects: 'Ver proyectos',
-      cv: 'Descargar CV',
       contact: 'Contacto',
     },
   },

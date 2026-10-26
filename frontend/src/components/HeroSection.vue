@@ -9,9 +9,6 @@
       <button class="btn btn--primary" type="button" @click="goProjects">
         {{ $t('hero.cta.projects') }}
       </button>
-      <a class="btn btn--outline" :href="cvPath" download>
-        {{ $t('hero.cta.cv') }}
-      </a>
       <button class="btn btn--outline" type="button" @click="$emit('scrollToContact')">
         {{ $t('hero.cta.contact') }}
       </button>
@@ -20,19 +17,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
-const { locale } = useI18n()
 
 defineEmits(['scrollToContact'])
 
 const goProjects = () => router.push('/projects')
-const cvPath = computed(
-  () => `/cv/Diógenes Quintero.CV.BACKEND.${locale.value === 'es' ? 'ES' : 'EN'}.pdf`,
-)
 </script>
 
 <style scoped>

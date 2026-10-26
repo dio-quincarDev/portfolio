@@ -87,6 +87,9 @@
           <span class="nav-sep" aria-hidden="true">│</span>
 
           <nav :aria-label="$t('nav.socialLinks')" class="row items-center no-wrap">
+            <a class="nav-btn text-mono" :href="cvPath" target="_blank" rel="noopener noreferrer">
+              {{ $t('nav.cv') }}
+            </a>
             <q-btn
               flat round
               icon="mdi-github"
@@ -170,6 +173,12 @@
             <q-item-section class="drawer-item-label">{{ $t('nav.about') }}</q-item-section>
             <div v-if="isAbout" class="drawer-active-indicator" aria-hidden="true">▌</div>
           </q-item>
+          <q-item tag="a" :href="cvPath" target="_blank" rel="noopener noreferrer" @click="drawer = false">
+            <q-item-section avatar>
+              <q-icon name="description" color="secondary" />
+            </q-item-section>
+            <q-item-section class="drawer-item-label">{{ $t('nav.cv') }}</q-item-section>
+          </q-item>
         </q-list>
 
         <div class="drawer-footer">
@@ -211,6 +220,10 @@ const isSpanish = computed(() => locale.value === 'es')
 const isHome = computed(() => router.currentRoute.value.path === '/')
 const isProjects = computed(() => router.currentRoute.value.path === '/projects')
 const isAbout = computed(() => router.currentRoute.value.path === '/about')
+
+const cvPath = computed(
+  () => `/cv/Diógenes Quintero.CV.BACKEND.${locale.value === 'es' ? 'ES' : 'EN'}.pdf`,
+)
 
 const goHome = () => { router.push('/'); drawer.value = false }
 const goProjects = () => { router.push('/projects'); drawer.value = false }

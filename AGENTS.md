@@ -1,65 +1,55 @@
-# AGENTS.md — dio-quincar.dev portfolio
+# AGENTS.md — dio-quincar.dev
 
 ## Repo structure
 
-Polyglot monorepo with three independently-built services orchestrated via Docker Compose.
+Single static Quasar SPA. Everything under `frontend/` is built and served by Nginx; there is no backend runtime in this repository.
 
-| Path | Tech | Entry point |
-|---|---|---|
-| `frontend/` | Quasar (Vue 3, Vite) | `npm run dev`, `npm run build` |
-| `backend/portfolio-gateway/` | Spring Cloud Gateway, Java 21, WebFlux | `PortfolioGatewayApplication.java` |
-| `backend/feat-flag-api-bytes-colabs/` | Spring Boot 3.3.1, Java 21, SQLite | `FeatureFlagApi.java` (has `@EnableScheduling`) |
+| Path | Purpose |
+|---|---|
+| `frontend/src/pages/` | Home, projects, about, 404 |
+| `frontend/src/components/` | Hero, featured projects, cards, detail, contact, stack |
+| `frontend/src/composables/` | Project data, contact form, scroll reveal |
+| `frontend/src/i18n/` | Spanish and English copy |
+| `frontend/public/` | CV PDFs, images, favicon, robots, sitemap |
+| `docker-compose.yml` | Single frontend container on the external proxy network |
+| `.github/workflows/deploy.yml` | Lint, build, multi-arch image, SSH deploy to OCI |
+
+The retired Spring backend and historical design notes are archived outside this repo in `../archive/portfolio-backend-2026-10-25/`.
 
 ## Essential commands
 
-**Frontend** (run from `frontend/`):
-- `npm install --legacy-peer-deps` (required flag, `postinstall` runs `quasar prepare`)
-- `npm run dev` — hot-reload dev server
-- `npm run build` — production build to `dist/spa/`
-- `npm run lint` — ESLint (flat config, `eslint.config.js`)
-- `npm run format` — Prettier (no semi, single quotes, 100 width)
-- Tests: **none** (`"test"` is a no-op placeholder)
+Run from `frontend/`:
 
-**Backend services** (run from each `backend/*/` dir):
-- `./mvnw clean package -DskipTests` — package (as Dockerfiles do)
-- `./mvnw test` — run unit tests
-- No shared parent POM; each service builds independently.
-
-**Full stack locally:**
-```
-cp .env.example .env
-docker compose up -d
-cd frontend && npm install --legacy-peer-deps && npm run dev
+```bash
+npm ci --legacy-peer-deps
+npm run dev
+npm run lint
+npm run build      # dist/spa/
+npm run format
 ```
 
-## Architecture quirks
+There is no test suite. `npm test` is a no-op. The validation gate is lint plus a production build.
 
-- Frontend uses **hash-based routing** (`vueRouterMode: 'hash'`), so URLs contain `#/`.
-- Frontend talks **only to the API Gateway** (`VITE_API_BASE_URL`), never directly to backend.
-- Gateway is reactive (WebFlux), not Spring MVC.
-- Feature Flag API uses **SQLite** via Hibernate community dialects — no PostgreSQL/MySQL.
-- Redis is required for Gateway (rate limiting); Gateway won't start healthy without it.
-- Gateway depends on `backend` (Feature Flag API) and `redis` being healthy; `frontend` depends on `gateway`.
-- JWT auth: `JWT_SECRET` env var must be set for the Feature Flag API (backend).
-- `docker compose` uses an **external** `proxy-network` for Nginx Proxy Manager integration.
+## Architecture
 
-## Frontend conventions
+- Quasar 2 + Vue 3, Composition API and `<script setup>`.
+- Router uses **history mode**. Nginx must keep `try_files $uri $uri/ /index.html`.
+- Static files only: no API calls. Contact is direct email plus social links (no form service).
+- Deploy: GitHub Actions builds `linux/amd64,linux/arm64`, pushes to Docker Hub, then pulls and restarts the container on OCI.
 
-- **Composition API** + `<script setup>` throughout.
-- **i18n**: vue-i18n with ES/EN translations in `src/i18n/`; use `$t()` for all user-facing strings.
-- **Dark mode**: toggle in toolbar using CSS custom properties (palette in `DESIGN.md`).
-- **Quasar plugins**: only `Notify`.
-- **Boot files**: `axios.js`, `apexcharts.js`, `i18n.js` (loaded in `quasar.config.js`).
-- **Color palette** (immutable, per `DESIGN.md`): bg `#f2efe9`, titles `#073b4c`, accent `#ef476f`.
-- Emails are sent via EmailJS (keys in `.env`, already committed to repo).
+## Content conventions
 
-## CI/CD (GitHub Actions)
-
-Every push to `main` triggers: `mvn test` for both Java services → `npm run lint` for frontend → Docker multi-arch build → SCP compose + deploy to OCI ARM64 VM.
+- Source of truth for projects is `src/composables/useProjects.js`.
+- All user-facing copy belongs in `src/i18n/es.js` and `src/i18n/en.js`; keep both in sync.
+- Pymeq is the featured project. Its authentication diagram is `public/images/pymes-auth-flow.png`.
+- Collaborations must state the actual contribution. Do not claim whole-team work.
+- Keep the tone sober. No superlatives, marketing language, emojis, or unsupported metrics.
+- CV files in `public/cv/` are the same PDFs stored in `../data-profile/cv/`. Replace both together.
+- The site is an SPA, not a PWA. It has no service worker and makes no offline claims.
+- Visual system: cream `#f2efe9`, teal `#073b4c`, coral `#ef476f`; DM Serif Display, Sora, JetBrains Mono.
 
 ## Gotchas
 
-- No `.mvn/` config dir in either backend service — only `mvnw` scripts.
-- `frontend/.env` has **real EmailJS keys committed** — be careful not to expose further.
-- `.gitignore` excludes `*.db`, `*.sqlite`, `*.sqlite3` (SQLite data is for local runs only; production uses Docker volumes).
-- The `postinstall` script (`quasar prepare`) must succeed for the dev server to work.
+- `postinstall` runs `quasar prepare`; use `--legacy-peer-deps` because of the dependency graph.
+- Every route needs the Nginx fallback; otherwise deep links return 404.
+- Keep `favicon.png` at 128×128 and `icons/dq-logo.png` at 512×512.

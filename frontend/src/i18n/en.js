@@ -7,6 +7,7 @@ export default {
     toggleDark: 'Toggle dark mode',
     toggleMenu: 'Toggle navigation menu',
     skipToContent: 'Skip to main content',
+    cv: 'CV',
     mainNavigation: 'Main navigation',
     socialLinks: 'Social links',
     menu: 'Navigation menu',
@@ -46,7 +47,6 @@ export default {
       'I build APIs and services with Java and Spring Boot, focused on authentication, security, and deployment.',
     cta: {
       projects: 'View projects',
-      cv: 'Download CV',
       contact: 'Contact',
     },
   },
